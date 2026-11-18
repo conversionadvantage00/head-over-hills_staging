@@ -1,4 +1,5 @@
-/* Head over Hills microsite. GSAP + ScrollTrigger for scenes, Lenis as the only smooth-scroll engine.
+/* * Whole file reviewed 2026-11-18. A * at the start of a comment marks a section already read.
+   Head over Hills microsite. GSAP + ScrollTrigger for scenes, Lenis as the only smooth-scroll engine.
    Reduced motion: no Lenis, no scrubbed scenes, final states shown at once. */
 (function () {
   'use strict';
@@ -8,7 +9,7 @@
   root.classList.add('js');
   if (reduce || !hasGsap) root.classList.add('no-motion');
 
-  /* ---------- split headings into words (accessible name kept on the parent) ---------- */
+  /* * ---------- split headings into words (accessible name kept on the parent) ---------- (reviewed 2026-11-18) */
   function split(el) {
     if (el.dataset.done) return;
     el.dataset.done = '1';
@@ -30,7 +31,7 @@
     })(el);
   }
 
-  /* ---------- smooth scroll ---------- */
+  /* * ---------- smooth scroll ---------- (reviewed 2026-11-18) */
   var lenis = null;
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
   if (!reduce && hasGsap && window.Lenis) {
@@ -46,13 +47,14 @@
     else el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' });
   }
 
-  /* ---------- nav ---------- */
+  /* * ---------- nav ---------- (reviewed 2026-11-18) */
   var nav = document.getElementById('nav');
   var burger = document.getElementById('burger');
   var menu = document.getElementById('menu');
   function onScroll() { nav.classList.toggle('is-solid', window.scrollY > 40); }
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
   window.addEventListener('load', onScroll);
+  if (lenis) lenis.on('scroll', onScroll);
   function setMenu(open) {
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
@@ -76,7 +78,7 @@
     });
   });
 
-  /* ---------- reveals ---------- */
+  /* * ---------- reveals ---------- (reviewed 2026-11-18) */
   var reveals = document.querySelectorAll('.reveal');
   if (reduce || !('IntersectionObserver' in window)) {
     reveals.forEach(function (r) { r.classList.add('is-in'); });
@@ -87,7 +89,7 @@
     reveals.forEach(function (r, i) { r.style.transitionDelay = (i % 4) * 0.08 + 's'; io.observe(r); });
   }
 
-  /* ---------- motion scenes ---------- */
+  /* * ---------- motion scenes ---------- (reviewed 2026-11-18) */
   if (hasGsap && !reduce) {
     document.querySelectorAll('[data-split]').forEach(split);
 
@@ -98,6 +100,24 @@
       .from('.hero__line .w', { yPercent: 60, opacity: 0, duration: 1.1, stagger: 0.07 }, 0.6)
       .from('.hero__btns', { y: 16, opacity: 0, duration: 1 }, 1.1);
     gsap.to('.hero__media', { yPercent: 12, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+
+    // pinned scenes are created in page order so later triggers measure the right spacing
+    // Place: the four photos dissolve into each other, one guide sentence each
+    var place = document.querySelector('.place');
+    if (place) {
+      place.classList.add('is-pinned');
+      var steps = place.querySelectorAll('.place__step');
+      var pt = gsap.timeline({ scrollTrigger: { trigger: place, start: 'top top', end: '+=' + (steps.length * 80) + '%', scrub: 0.6, pin: '.place__pin', anticipatePin: 1 } });
+      steps.forEach(function (st, i) {
+        var im = st.querySelector('img'), ln = st.querySelector('.place__line');
+        pt.fromTo(im, { scale: 1.08 }, { scale: 1, ease: 'none', duration: 1.2 }, i);
+        if (i) {
+          pt.to(steps[i - 1].querySelector('.place__line'), { opacity: 0, y: -24, duration: 0.2 }, i - 0.35);
+          pt.to(st, { opacity: 1, duration: 0.4, ease: 'none' }, i - 0.2);
+        }
+        pt.from(ln, { y: 32, opacity: 0, duration: 0.3 }, i + (i ? 0.05 : 0));
+      });
+    }
 
     // headings: word by word, restrained
     document.querySelectorAll('[data-split]').forEach(function (el) {
@@ -117,17 +137,6 @@
       .from('.hastens__copy h2 .w', { yPercent: 50, opacity: 0, stagger: 0.03, duration: 0.3 }, 0.6)
       .from('.hastens__line, .hastens__sub, .hastens__copy .btns', { y: 24, opacity: 0, stagger: 0.08, duration: 0.3 }, 0.8);
 
-    // Rooms: pinned sideways journey on wide screens, native swipe row on phones
-    var mm = gsap.matchMedia();
-    mm.add('(min-width: 761px)', function () {
-      var track = document.getElementById('roomsTrack');
-      function dist() { return Math.max(0, track.scrollWidth - window.innerWidth); }
-      gsap.to(track, {
-        x: function () { return -dist(); }, ease: 'none',
-        scrollTrigger: { trigger: '.rooms__pin', start: 'top top', end: function () { return '+=' + dist(); }, pin: true, scrub: 0.6, invalidateOnRefresh: true, anticipatePin: 1 }
-      });
-    });
-
     // gentle drift on the cellar photo
     gsap.fromTo('.cellar__media img', { yPercent: -4, scale: 1.06 }, { yPercent: 4, scale: 1.06, ease: 'none', scrollTrigger: { trigger: '.cellar', start: 'top bottom', end: 'bottom top', scrub: true } });
 
@@ -135,7 +144,7 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
   }
 
-  /* ---------- pop-up ---------- */
+  /* * ---------- pop-up ---------- (reviewed 2026-11-18) */
   var BOOK = 'https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&ChannelID=1';
   var pop = document.getElementById('pop');
   var slides = document.getElementById('popSlides');
@@ -205,19 +214,102 @@
     card.addEventListener('click', function () { if (!card.dataset.dragged) openPop(card); });
     card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPop(card); } });
   });
+  /* * ---------- rooms: slow drifting carousel, hover or touch hands it back ---------- (reviewed 2026-11-18) */
+  (function () {
+    var track = document.getElementById('roomsTrack');
+    if (!track) return;
+    var rooms = Array.prototype.slice.call(track.querySelectorAll('.room'));
+    // arrows, same as the photo rows
+    var wrap = document.createElement('div'); wrap.className = 'rowwrap';
+    track.parentNode.insertBefore(wrap, track); wrap.appendChild(track);
+    var arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+    var p = document.createElement('button'), n = document.createElement('button');
+    p.type = n.type = 'button'; p.className = 'pop__arrow pop__arrow--prev'; n.className = 'pop__arrow pop__arrow--next';
+    p.setAttribute('aria-label', 'Previous rooms'); n.setAttribute('aria-label', 'Next rooms');
+    p.innerHTML = arrow; n.innerHTML = arrow.replace('M15 5l-7 7 7 7', 'M9 5l7 7-7 7');
+    wrap.appendChild(p); wrap.appendChild(n);
+    var loop = !reduce;
+    if (loop) {
+      // a second, hidden copy of the rooms so the drift never runs out
+      rooms.forEach(function (r) {
+        var c = r.cloneNode(true);
+        c.setAttribute('aria-hidden', 'true'); c.setAttribute('tabindex', '-1'); c.removeAttribute('aria-label');
+        c.addEventListener('click', function () { openPop(c); });
+        c.querySelectorAll('img').forEach(function (im) { im.alt = ''; });
+        track.appendChild(c);
+      });
+    }
+    function setW() { return loop ? track.children[rooms.length].offsetLeft - rooms[0].offsetLeft : 0; }
+    function stepW() { return rooms[0].getBoundingClientRect().width + 16; }
+    var pos = 0, lastSet = 0, idleUntil = 0, hover = false, inView = false, last = 0;
+    var SPEED = window.innerWidth < 761 ? 18 : 26; // px per second, slow
+    function wrapPos() { var w = setW(); if (!w) return; if (pos >= w) pos -= w; if (pos < 0) pos += w; }
+    function apply() { track.scrollLeft = pos; lastSet = track.scrollLeft; }
+    function paused(now) { return hover || now < idleUntil || !inView || pop.open || document.hidden || !!track.querySelector(":focus-visible"); }
+    function upd() { if (loop) return; p.disabled = track.scrollLeft < 4; n.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4; }
+    track.addEventListener('scroll', function () {
+      if (Math.abs(track.scrollLeft - lastSet) > 1) { pos = track.scrollLeft; idleUntil = performance.now() + 2500; }
+      upd();
+    }, { passive: true });
+    function go(d) {
+      idleUntil = performance.now() + 4000;
+      if (loop) { pos = track.scrollLeft; var w = setW(); if (d > 0 && pos + stepW() > track.scrollWidth - track.clientWidth) { pos -= w; apply(); } if (d < 0 && pos - stepW() < 0) { pos += w; apply(); } }
+      track.scrollBy({ left: d * stepW(), behavior: reduce ? 'auto' : 'smooth' });
+    }
+    p.addEventListener('click', function () { go(-1); }); n.addEventListener('click', function () { go(1); });
+    window.addEventListener('resize', upd); upd();
+    if (!loop) return;
+    // mouse over the row: stop and behave like a normal row
+    track.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hover = true; });
+    track.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { hover = false; idleUntil = performance.now() + 600; } });
+    wrap.addEventListener('mouseenter', function () { hover = true; });
+    wrap.addEventListener('mouseleave', function () { hover = false; idleUntil = performance.now() + 600; });
+    // a finger on the row: stop, give it a few seconds after letting go
+    track.addEventListener('touchstart', function () { idleUntil = Infinity; }, { passive: true });
+    track.addEventListener('touchend', function () { idleUntil = performance.now() + 4000; }, { passive: true });
+    function tick(now) {
+      var dt = last ? Math.min(now - last, 64) : 0; last = now;
+      var r = track.getBoundingClientRect(); inView = r.bottom > 0 && r.top < window.innerHeight;
+      if (!paused(now)) { pos += SPEED * dt / 1000; wrapPos(); apply(); }
+      else if (now > idleUntil - 2200 && !hover) { var w = setW(); if (w && track.scrollLeft >= w) { pos = track.scrollLeft - w; apply(); } }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
+
   document.querySelectorAll('[data-pop-btn]').forEach(function (b) {
     b.addEventListener('click', function () { openPop(b.closest('.split__copy, .cellar__inner')); });
   });
 
-  /* ---------- photo album lightbox ---------- */
+  /* * ---------- sideways photo rows: arrows for mouse users ---------- (reviewed 2026-11-18) */
+  document.querySelectorAll('.strip--scroll').forEach(function (row) {
+    var wrap = document.createElement('div'); wrap.className = 'rowwrap';
+    row.parentNode.insertBefore(wrap, row); wrap.appendChild(row);
+    var arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+    var p = document.createElement('button'), n = document.createElement('button');
+    p.type = n.type = 'button'; p.className = 'pop__arrow pop__arrow--prev'; n.className = 'pop__arrow pop__arrow--next';
+    p.setAttribute('aria-label', 'Previous photos'); n.setAttribute('aria-label', 'Next photos');
+    p.innerHTML = arrow; n.innerHTML = arrow.replace('M15 5l-7 7 7 7', 'M9 5l7 7-7 7');
+    wrap.appendChild(p); wrap.appendChild(n);
+    function upd() { p.disabled = row.scrollLeft < 4; n.disabled = row.scrollLeft + row.clientWidth > row.scrollWidth - 4; }
+    function go(d) { row.scrollBy({ left: d * row.clientWidth * 0.75, behavior: reduce ? 'auto' : 'smooth' }); }
+    p.addEventListener('click', function () { go(-1); }); n.addEventListener('click', function () { go(1); });
+    row.addEventListener('scroll', upd, { passive: true }); window.addEventListener('resize', upd); upd();
+  });
+
+  /* * ---------- photo album lightbox ---------- (reviewed 2026-11-18) */
   var lb = document.getElementById('lb');
   var lbImg = document.getElementById('lbImg');
-  var items = Array.prototype.slice.call(document.querySelectorAll('.album__item img'));
+  var items = Array.prototype.slice.call(document.querySelectorAll('.album__item img, .strip img, .cellar__strip img'));
   var cur = 0;
-  function showLb(i) { cur = (i + items.length) % items.length; lbImg.src = items[cur].getAttribute('src'); lbImg.alt = items[cur].alt; }
+  function showLb(i) { cur = (i + items.length) % items.length; lbImg.src = items[cur].currentSrc || items[cur].src; lbImg.alt = items[cur].alt; }
   items.forEach(function (im, i) {
-    im.parentNode.setAttribute('aria-label', 'Open photo: ' + im.alt);
-    im.parentNode.addEventListener('click', function () { lastFocus = im.parentNode; showLb(i); if (lenis) lenis.stop(); lb.showModal(); });
+    var hit = im.parentNode.classList.contains('album__item') ? im.parentNode : im;
+    if (hit === im) { im.setAttribute('tabindex', '0'); im.setAttribute('role', 'button'); }
+    hit.setAttribute('aria-label', 'Open photo: ' + im.alt);
+    function open() { lastFocus = hit; showLb(i); if (lenis) lenis.stop(); lb.showModal(); }
+    hit.addEventListener('click', open);
+    if (hit === im) im.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } });
   });
   document.getElementById('lbPrev').addEventListener('click', function () { showLb(cur - 1); });
   document.getElementById('lbNext').addEventListener('click', function () { showLb(cur + 1); });
@@ -226,7 +318,7 @@
   lb.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') showLb(cur - 1); if (e.key === 'ArrowRight') showLb(cur + 1); });
   lb.addEventListener('close', function () { if (lenis) lenis.start(); if (lastFocus) lastFocus.focus({ preventScroll: true }); });
 
-  /* ---------- form: prefill from Enquire buttons, send by email until a form service is chosen ---------- */
+  /* * ---------- form: prefill from Enquire buttons, send by email until a form service is chosen ---------- (reviewed 2026-11-18) */
   var form = document.getElementById('form');
   var about = document.getElementById('formAbout');
   function prefill(text) {

@@ -10,7 +10,8 @@
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
-<!-- Copy rule: every line on this page comes from the old specials site or the Brand Guide V2. Only brand house-rule fixes (Head over Hills, Hästens) and typos were changed. -->
+<!-- * Whole page reviewed 2026-11-18. A * at the start of a comment marks a section already read. -->
+<!-- * Copy rule: every line on this page comes from the old specials site or the Brand Guide V2. Only brand house-rule fixes (Head over Hills, Hästens) and typos were changed. (reviewed 2026-11-18) -->
 
 <header class="nav" id="nav">
   <a class="nav__logo" href="#top" aria-label="Head over Hills, back to the top"><img src="img/ui/logo-text-white.svg" alt="Head over Hills"></a>
@@ -39,7 +40,7 @@
 
 <main id="top">
 
-<!-- HERO -->
+<!-- * HERO (reviewed 2026-11-18) -->
 <section class="hero" aria-label="Head over Hills Luxury Retreat">
   <div class="hero__media"><img class="hero__img" src="img/rooms/viewpoint-2.webp" width="1920" height="1080" alt="Loungers on a balcony at Head over Hills looking out over the ocean and the Knysna Heads"></div>
   <div class="hero__shade" aria-hidden="true"></div>
@@ -53,7 +54,7 @@
   </div>
 </section>
 
-<!-- ABOUT -->
+<!-- * ABOUT (reviewed 2026-11-18) -->
 <section class="about" id="about" aria-labelledby="aboutTitle">
   <h2 class="statement" id="aboutTitle" data-split>Eight rooms. The Knysna Heads. <span class="mist">An all-Hästens sleep experience.</span></h2>
   <div class="about__grid">
@@ -70,7 +71,17 @@
   </div>
 </section>
 
-<!-- SPECIALS -->
+<!-- * PLACE: brand guide experience-led copy line, one sentence per photo (reviewed 2026-11-18) -->
+<section class="place" id="place" aria-label="Wake to the ocean. Linger over breakfast. Watch the light change over the Heads. Sleep deeply.">
+  <div class="place__pin">
+    <div class="place__step"><img src="img/aerial/p5322.jpg" width="2400" height="1600" alt="Head over Hills on the cliffs of the Knysna Heads, from the air"><p class="place__line">Wake to the ocean.</p></div>
+    <div class="place__step"><img src="img/aerial/p8137.jpg" width="2400" height="1600" alt="A platter served on the terrace above the sea"><p class="place__line">Linger over breakfast.</p></div>
+    <div class="place__step"><img src="img/aerial/p7444.jpg" width="2400" height="1600" alt="Head over Hills on the cliff edge above the ocean"><p class="place__line">Watch the light change over the Heads.</p></div>
+    <div class="place__step"><img src="img/new/hoh3.jpg" width="2400" height="1599" alt="A bed facing the Heads at sunrise"><p class="place__line">Sleep deeply.</p></div>
+  </div>
+</section>
+
+<!-- * SPECIALS (reviewed 2026-11-18) -->
 <section class="specials" id="specials" aria-labelledby="spTitle">
   <header class="head">
     <h2 id="spTitle" data-split>Our Specials</h2>
@@ -124,6 +135,7 @@
 
     <article class="card reveal" data-pop>
       <img src="img/sp-celebrate.webp" width="1920" height="1000" loading="lazy" alt="A bottle of bubbly on ice">
+      <script type="application/json" class="pop-imgs">["img/sp-celebrate.webp","img/aerial/p8146.jpg","img/aerial/p8149.jpg"]</script>
       <div class="card__body"><h3>Celebrations</h3><span class="card__more">Learn More</span></div>
       <template><div class="pop__copy">
         <h3>Celebrations</h3>
@@ -161,7 +173,7 @@
   </div>
 </section>
 
-<!-- HÄSTENS: framed photo opens to full screen on scroll -->
+<!-- * HÄSTENS: framed photo opens to full screen on scroll (reviewed 2026-11-18) -->
 <section class="hastens" id="hastens" aria-labelledby="haTitle">
   <div class="hastens__pin">
     <div class="hastens__frame"><img src="img/rooms/elephant-2.webp" width="1920" height="1080" loading="lazy" alt="A Hästens bed facing the open doors and the ocean"></div>
@@ -178,9 +190,25 @@
   </div>
 </section>
 
-<!-- ACCOMMODATION -->
+<!-- * HÄSTENS PHOTO ROW: the original site's Hästens photos (reviewed 2026-11-18) -->
+<div class="strip strip--scroll swipe" aria-label="Hästens photos">
+  <img src="img/hastens/ha-1.webp" width="1920" height="823" loading="lazy" alt="A Hästens bed facing the view">
+  <img src="img/hastens/ha-2.webp" width="640" height="428" loading="lazy" alt="A Hästens bed with blue check linen">
+  <img src="img/hastens/ha-3.webp" width="640" height="425" loading="lazy" alt="A Hästens bed made up for guests">
+  <img src="img/hastens/ha-4.webp" width="640" height="428" loading="lazy" alt="A Hästens bed with the sea beyond">
+  <img src="img/hastens/ha-5.webp" width="640" height="480" loading="lazy" alt="A Hästens bed on the deck above the ocean">
+  <img src="img/hastens/ha-6.webp" width="771" height="581" loading="lazy" alt="A Hästens bed on the deck facing the Heads">
+  <img src="img/hastens/ha-7.webp" width="600" height="800" loading="lazy" alt="A suite with its Hästens bed">
+  <img src="img/hastens/ha-8.webp" width="1920" height="823" loading="lazy" alt="A Hästens bed by the window">
+  <img src="img/hastens/ha-9.webp" width="600" height="800" loading="lazy" alt="A Hästens bed with patterned cushions">
+  <img src="img/hastens/ha-10.webp" width="1920" height="823" loading="lazy" alt="A suite looking out to the Heads">
+  <img src="img/hastens/ha-11.webp" width="600" height="800" loading="lazy" alt="A Hästens bed in a suite">
+  <img src="img/hastens/ha-12.webp" width="1920" height="823" loading="lazy" alt="Loungers on the deck by a suite">
+</div>
+
+<!-- * ACCOMMODATION (reviewed 2026-11-18) -->
 <section class="rooms" id="rooms" aria-labelledby="roTitle">
-  <div class="rooms__pin">
+  <div class="rooms__inner">
     <header class="head head--left">
       <h2 id="roTitle" data-split>Accommodation</h2>
       <p class="head__sub">Experience the Charm &amp; Magic of our Boutique Hotel</p>
@@ -282,12 +310,12 @@
   </div>
 </section>
 
-<!-- STATEMENT -->
+<!-- * STATEMENT (reviewed 2026-11-18) -->
 <section class="quote" aria-label="Sunset over the Heads">
   <p class="statement" data-split>Sunset over the Heads. A glass of South African wine. <span class="mist">Nowhere else you need to be.</span></p>
 </section>
 
-<!-- MOMENTS TO REMEMBER -->
+<!-- * MOMENTS TO REMEMBER (reviewed 2026-11-18) -->
 <section class="moments" id="moments" aria-labelledby="moTitle">
   <header class="head">
     <h2 id="moTitle" data-split>Moments to Remember</h2>
@@ -313,7 +341,7 @@
         <h4>Picnics</h4>
         <p>Give us 24 hours’ notice and we will pack a picnic for you so that you can go out for the day and enjoy the sights of Knysna. Have a picnic on the beach at Brenton-on-Sea or just down below us at Coney Glen.</p>
       </div></template>
-      <script type="application/json" class="pop-imgs">["img/dine-view.webp","img/new/hoh20.jpg","img/new/hoh21.jpg","img/new/hoh19.jpg","img/new/hoh17.jpg","img/new/hoh18.jpg","img/new/hoh15.jpg","img/new/hoh16.jpg","img/new/hoh31.jpg","img/dine-plate.webp","img/dine-wine.webp"]</script>
+      <script type="application/json" class="pop-imgs">["img/dine-view.webp","img/new/hoh20.jpg","img/new/hoh21.jpg","img/new/hoh19.jpg","img/new/hoh17.jpg","img/new/hoh18.jpg","img/new/hoh15.jpg","img/new/hoh16.jpg","img/new/hoh31.jpg","img/aerial/p8138.jpg","img/aerial/p8145.jpg","img/aerial/p8146.jpg","img/aerial/p8149.jpg","img/dine-plate.webp","img/dine-wine.webp"]</script>
     </div>
   </article>
 
@@ -324,7 +352,7 @@
     <img src="img/new/hoh18.jpg" width="2400" height="1800" loading="lazy" alt="A meat dish served with wine">
   </div>
 
-  <!-- WINE CELLAR: its own sub-brand mark and red accent, per the brand guide -->
+  <!-- * WINE CELLAR: its own sub-brand mark and red accent, per the brand guide (reviewed 2026-11-18) -->
   <article class="cellar" id="cellar" aria-labelledby="ceTitle">
     <div class="cellar__media"><img src="img/cellar-hero.webp" width="1418" height="1000" loading="lazy" alt="Candlelight and wine bottles in the Head over Hills wine cellar"></div>
     <div class="cellar__shade" aria-hidden="true"></div>
@@ -409,7 +437,7 @@
   </div>
 </section>
 
-<!-- AWARDS -->
+<!-- * AWARDS (reviewed 2026-11-18) -->
 <section class="awards" id="awards" aria-labelledby="awTitle">
   <header class="head">
     <h2 id="awTitle" data-split>Award-Winning Excellence</h2>
@@ -423,13 +451,21 @@
   </figure>
 </section>
 
-<!-- PHOTO ALBUM -->
+<!-- * PHOTO ALBUM (reviewed 2026-11-18) -->
 <section class="album" id="gallery" aria-labelledby="alTitle">
   <header class="head">
     <h2 id="alTitle" data-split>Photo Album</h2>
   </header>
   <div class="album__grid" id="albumGrid">
-    <button type="button" class="album__item album__item--wide reveal"><img src="img/new/hoh3.jpg" width="2400" height="1599" loading="lazy" alt="A bed facing the Heads at sunrise"></button>
+    <button type="button" class="album__item album__item--wide reveal"><img src="img/aerial/p5351.jpg" width="2400" height="1600" loading="lazy" alt="The houses of the Heads above the cliffs, from the air"></button>
+    <button type="button" class="album__item reveal"><img src="img/aerial/p5333.jpg" width="2400" height="1600" loading="lazy" alt="Head over Hills among the trees on the Heads"></button>
+    <button type="button" class="album__item reveal"><img src="img/aerial/p5339.jpg" width="2400" height="1600" loading="lazy" alt="Head over Hills on the cliff, from the air"></button>
+    <button type="button" class="album__item reveal"><img src="img/aerial/p5341.jpg" width="1600" height="2400" loading="lazy" alt="The cliffs below Head over Hills"></button>
+    <button type="button" class="album__item album__item--wide reveal"><img src="img/aerial/p5368.jpg" width="2400" height="1600" loading="lazy" alt="The Knysna Heads coastline from the air"></button>
+    <button type="button" class="album__item reveal"><img src="img/aerial/p5363.jpg" width="2400" height="1600" loading="lazy" alt="The Heads from the air"></button>
+    <button type="button" class="album__item reveal"><img src="img/aerial/p5377.jpg" width="2400" height="1600" loading="lazy" alt="The coast below the Heads"></button>
+    <button type="button" class="album__item reveal"><img src="img/aerial/p7448.jpg" width="1600" height="2400" loading="lazy" alt="Head over Hills on the cliff edge"></button>
+    <button type="button" class="album__item reveal"><img src="img/aerial/p7461.jpg" width="2400" height="1600" loading="lazy" alt="Looking out over the cliffs and the sea"></button>
     <button type="button" class="album__item reveal"><img src="img/new/hoh22.jpg" width="2400" height="1599" loading="lazy" alt="A bright suite opening onto the balcony"></button>
     <button type="button" class="album__item reveal"><img src="img/new/hoh23.jpg" width="2400" height="1599" loading="lazy" alt="A suite with a view of the Heads"></button>
     <button type="button" class="album__item reveal"><img src="img/new/hoh19.jpg" width="2400" height="1599" loading="lazy" alt="Red wine being poured on the terrace above the sea"></button>
@@ -455,7 +491,7 @@
   </div>
 </section>
 
-<!-- FAQ -->
+<!-- * FAQ (reviewed 2026-11-18) -->
 <section class="faq" id="faq" aria-labelledby="faqTitle">
   <figure class="faq__photo reveal"><img src="img/rooms/whale-4.webp" width="1920" height="1080" loading="lazy" alt="Looking out from a suite to the ocean"></figure>
   <div class="faq__list">
@@ -472,7 +508,7 @@
   </div>
 </section>
 
-<!-- CONTACT -->
+<!-- * CONTACT (reviewed 2026-11-18) -->
 <section class="contact" id="contact" aria-labelledby="coTitle">
   <div class="contact__intro">
     <p class="statement statement--sm" data-split>Stay for the <span class="mist">view.</span></p>
@@ -516,7 +552,7 @@
 
 <a class="wa" href="https://wa.me/27729058020" target="_blank" rel="noopener" aria-label="WhatsApp Head over Hills"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.3-.4.8-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.1 5.1 0 0 0 1.1 2.7 11.7 11.7 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.3 2.2 2.2 0 0 0 .2-1.3c-.1-.1-.2-.2-.4-.3z"/></svg></a>
 
-<!-- Pop-up: filled from the clicked card's template -->
+<!-- * Pop-up: filled from the clicked card's template (reviewed 2026-11-18) -->
 <dialog class="pop" id="pop" aria-labelledby="popTitle">
   <div class="pop__wrap">
     <div class="pop__gallery">
@@ -529,7 +565,7 @@
   <button class="pop__close" id="popClose" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
 </dialog>
 
-<!-- Photo album lightbox -->
+<!-- * Photo album lightbox (reviewed 2026-11-18) -->
 <dialog class="lb" id="lb" aria-label="Photo Album">
   <img id="lbImg" alt="">
   <button class="pop__arrow pop__arrow--prev" id="lbPrev" type="button" aria-label="Previous photo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>

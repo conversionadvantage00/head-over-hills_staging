@@ -1,4 +1,5 @@
-/* Head over Hills microsite, Brand Guide V2 (Nov 2026).
+/* * Whole file reviewed 2026-11-18. A * at the start of a comment marks a section already read.
+   Head over Hills microsite, Brand Guide V2 (Nov 2026).
    Colours, type and UI rules follow the guide: flat rectangular buttons, square cards,
    8-point spacing, Lagoon Mist as a sparing accent, Wine Cellar Red only in the cellar. */
 
@@ -38,7 +39,7 @@ button{font:inherit;color:inherit}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .mist{color:var(--mist)}
 
-/* ---------- buttons: flat, compact, rectangular ---------- */
+/* * ---------- buttons: flat, compact, rectangular ---------- (reviewed 2026-11-18) */
 .btn{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:0 24px;border:1px solid transparent;border-radius:0;
   font:700 12px/1 var(--ui);letter-spacing:.14em;text-transform:uppercase;text-decoration:none;cursor:pointer;
   transition:background-color .35s var(--ease),color .35s var(--ease),border-color .35s var(--ease)}
@@ -53,7 +54,7 @@ button{font:inherit;color:inherit}
 }
 .btns{display:flex;flex-wrap:wrap;gap:16px;margin-top:32px}
 
-/* ---------- nav ---------- */
+/* * ---------- nav ---------- (reviewed 2026-11-18) */
 .nav{position:fixed;inset:0 0 auto;z-index:50;display:flex;align-items:center;gap:32px;height:80px;padding:0 var(--gut);
   transition:background-color .5s var(--ease),height .5s var(--ease)}
 .nav.is-solid{background:rgba(16,16,45,.94);height:68px}
@@ -76,7 +77,7 @@ button{font:inherit;color:inherit}
 .menu nav a{font:400 clamp(32px,9vw,48px)/1.25 var(--display);color:var(--white);text-decoration:none}
 .menu .btn{align-self:flex-start}
 
-/* ---------- hero ---------- */
+/* * ---------- hero ---------- (reviewed 2026-11-18) */
 .hero{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;display:grid;place-items:center;text-align:center}
 .hero__media{position:absolute;inset:0}
 .hero__img{width:100%;height:100%;object-fit:cover;object-position:50% 60%}
@@ -86,7 +87,7 @@ button{font:inherit;color:inherit}
 .hero__line{margin:40px 0 0;font:400 clamp(40px,6.4vw,104px)/1.02 var(--display);color:var(--white);max-width:14ch}
 .hero__btns{display:flex;flex-wrap:wrap;justify-content:center;gap:16px;margin-top:40px}
 
-/* ---------- shared heads and statements ---------- */
+/* * ---------- shared heads and statements ---------- (reviewed 2026-11-18) */
 .head{max-width:var(--max);margin:0 auto 64px;padding:0 var(--gut);text-align:center}
 .head h2,.exp__title{font:400 clamp(44px,6vw,96px)/1.04 var(--display);color:var(--white)}
 .head__sub{margin:24px auto 0;max-width:46ch;font-size:clamp(16px,1.3vw,19px);color:var(--shell)}
@@ -97,14 +98,14 @@ button{font:inherit;color:inherit}
 .stars{color:var(--mist);letter-spacing:.3em;font-size:14px;margin:24px 0 0}
 [data-split] .w{display:inline-block;will-change:transform}
 
-/* ---------- about ---------- */
+/* * ---------- about ---------- (reviewed 2026-11-18) */
 .about{padding:var(--sg) 0 0}
 .about__grid{max-width:var(--max);margin:96px auto 0;padding:0 var(--gut);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(32px,6vw,96px);align-items:center}
 .about__photo{margin:0;aspect-ratio:1170/735;overflow:hidden;max-width:1170px}
 .about__photo img{width:100%;height:100%;object-fit:cover}
 .about__copy h3{font:400 clamp(28px,2.6vw,40px)/1.15 var(--display);color:var(--white);margin-bottom:24px}
 
-/* ---------- cards ---------- */
+/* * ---------- cards ---------- (reviewed 2026-11-18) */
 .specials{padding:var(--sg) 0 0}
 .cards{max-width:var(--max);margin:0 auto;padding:0 var(--gut);display:grid;gap:16px}
 .cards--4{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -122,7 +123,7 @@ button{font:inherit;color:inherit}
 }
 .card:focus-visible,.room:focus-visible,.panel:focus-visible{outline-offset:-3px}
 
-/* ---------- Hästens scene ---------- */
+/* * ---------- Hästens scene ---------- (reviewed 2026-11-18) */
 .hastens{position:relative;margin-top:var(--sg)}
 .hastens__pin{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden;display:grid;place-items:center}
 .hastens__frame{position:absolute;inset:0;clip-path:inset(12% 18% 12% 18%);will-change:clip-path}
@@ -137,19 +138,41 @@ button{font:inherit;color:inherit}
 .no-motion .hastens__frame img{transform:none}
 .no-motion .hastens__shade,.no-motion .hastens__copy{opacity:1}
 
-/* ---------- rooms ---------- */
-.rooms{padding:max(0px,calc(var(--sg) - 112px)) 0 0}
-.rooms__pin{overflow:hidden;padding-top:112px;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:center;padding-bottom:48px}
+/* * ---------- place: four full-screen photos, one guide sentence each ---------- (reviewed 2026-11-18) */
+.place{margin-top:var(--sg)}
+.place__step{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:var(--ink)}
+.place__step img{width:100%;height:100%;object-fit:cover}
+.place__step::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,16,45,.25) 0%,rgba(16,16,45,0) 40%,rgba(16,16,45,.7) 100%)}
+.place__line{position:absolute;z-index:2;left:var(--gut);right:var(--gut);bottom:clamp(56px,12vh,128px);margin:0;max-width:14ch;font:400 clamp(44px,6.4vw,104px)/1.02 var(--display);color:var(--white)}
+.place.is-pinned .place__pin{position:relative;height:100vh;height:100svh;min-height:560px;overflow:hidden}
+.place.is-pinned .place__step{position:absolute;inset:0;height:auto;min-height:0;opacity:0}
+.place.is-pinned .place__step:first-child{opacity:1}
+
+/* Hästens photo row: scrolls sideways on every screen */
+.strip.strip--scroll{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;margin-top:16px}
+.strip--scroll::-webkit-scrollbar{display:none}
+.strip.strip--scroll img{flex:0 0 calc((min(100vw,var(--max)) - 2 * var(--gut) - 48px) / 4);max-width:480px;min-width:0;scroll-snap-align:start}
+.strip img,.cellar__strip img{cursor:zoom-in}
+.rowwrap{position:relative;max-width:var(--max);margin:0 auto}
+.rowwrap .pop__arrow{top:calc(50% + 8px)}
+.rowwrap .pop__arrow--prev{left:calc(var(--gut) + 12px)}.rowwrap .pop__arrow--next{right:calc(var(--gut) + 12px)}
+.rowwrap .pop__arrow[disabled]{opacity:0;pointer-events:none}
+
+/* * ---------- rooms ---------- (reviewed 2026-11-18) */
+.rooms{padding:var(--sg) 0 0}
 .rooms .head{margin-bottom:48px}
-.rooms__track{display:flex;gap:16px;padding:0 var(--gut);will-change:transform}
-.room{flex:0 0 auto;width:min(60vw,880px,calc((100svh - 340px) * 1.6));aspect-ratio:16/10}
+/* slow drifting carousel: native sideways scroll, JS moves it, hover or touch hands control back */
+.rooms__track{display:flex;gap:16px;padding:0 var(--gut);overflow-x:auto;overflow-y:hidden;scrollbar-width:none;scroll-snap-type:none!important;overscroll-behavior-x:contain}
+.rooms__track::-webkit-scrollbar{display:none}
+.rooms .rowwrap{max-width:none}
+.room{flex:0 0 auto;width:clamp(320px,46vw,820px);aspect-ratio:16/10}
 .room h3{font:400 clamp(26px,2.4vw,40px)/1.1 var(--display);color:var(--white)}
 .room__body{padding:32px}
 
-/* ---------- quote ---------- */
+/* * ---------- quote ---------- (reviewed 2026-11-18) */
 .quote{padding:var(--sg) var(--gut) 0}
 
-/* ---------- moments ---------- */
+/* * ---------- moments ---------- (reviewed 2026-11-18) */
 .moments{padding:var(--sg) 0 0}
 .split{max-width:var(--max);margin:0 auto;padding:0 var(--gut);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);gap:clamp(32px,6vw,96px);align-items:center}
 .split__photo{margin:0;aspect-ratio:1170/735;overflow:hidden;max-width:1170px}
@@ -178,12 +201,12 @@ button{font:inherit;color:inherit}
 .panel h3{font:400 clamp(32px,3vw,48px)/1.08 var(--display);color:var(--white);margin-bottom:16px}
 .panel p{color:var(--shell)}
 
-/* ---------- awards ---------- */
+/* * ---------- awards ---------- (reviewed 2026-11-18) */
 .awards{padding:var(--sg) 0 0}
 .awards__card{margin:0 auto;max-width:1200px;padding:0 var(--gut)}
 .awards__card img{width:100%;height:auto;background:#fff}
 
-/* ---------- album ---------- */
+/* * ---------- album ---------- (reviewed 2026-11-18) */
 .album{padding:var(--sg) 0 0}
 .album__grid{max-width:var(--max);margin:0 auto;padding:0 var(--gut);display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:clamp(180px,18vw,300px);grid-auto-flow:dense;gap:16px}
 .album__item{position:relative;padding:0;border:0;background:var(--ink);overflow:hidden;cursor:zoom-in}
@@ -191,7 +214,7 @@ button{font:inherit;color:inherit}
 .album__item img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
 @media (hover:hover){.album__item:hover img{transform:scale(1.04)}}
 
-/* ---------- faq ---------- */
+/* * ---------- faq ---------- (reviewed 2026-11-18) */
 .faq{max-width:var(--max);margin:var(--sg) auto 0;padding:0 var(--gut);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(32px,6vw,96px);align-items:start}
 .faq__photo{margin:0;position:sticky;top:96px;aspect-ratio:4/5;overflow:hidden}
 .faq__photo img{width:100%;height:100%;object-fit:cover}
@@ -204,7 +227,7 @@ button{font:inherit;color:inherit}
 .faq details[open] summary::after{transform:rotate(-135deg);margin-top:14px}
 .faq details p{padding:0 0 24px;margin:0;max-width:60ch}
 
-/* ---------- contact ---------- */
+/* * ---------- contact ---------- (reviewed 2026-11-18) */
 .contact{max-width:var(--max);margin:var(--sg) auto 0;padding:0 var(--gut) var(--sg);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(40px,6vw,96px);align-items:start}
 .contact h2{font:400 clamp(28px,2.4vw,36px)/1.1 var(--display);color:var(--white);margin-bottom:24px}
 .contact__list{list-style:none;padding:0;margin:0 0 32px;display:grid;gap:8px}
@@ -223,7 +246,7 @@ button{font:inherit;color:inherit}
 .form.is-flash{animation:flash 1.2s var(--ease)}
 @keyframes flash{0%{box-shadow:0 0 0 0 rgba(92,174,172,.0)}30%{box-shadow:0 0 0 3px rgba(92,174,172,.9)}100%{box-shadow:0 0 0 0 rgba(92,174,172,0)}}
 
-/* ---------- footer ---------- */
+/* * ---------- footer ---------- (reviewed 2026-11-18) */
 .foot{border-top:1px solid rgba(204,199,196,.18);padding:64px var(--gut) 96px;text-align:center;display:flex;flex-direction:column;align-items:center}
 .foot__emblem{width:56px;height:auto;margin-bottom:24px}
 .foot__logo{width:220px;height:auto;margin-bottom:24px}
@@ -231,11 +254,11 @@ button{font:inherit;color:inherit}
 .foot a{text-decoration:none}
 .foot__small{font-size:13px;opacity:.75;max-width:60ch}
 
-/* ---------- WhatsApp ---------- */
+/* * ---------- WhatsApp ---------- (reviewed 2026-11-18) */
 .wa{position:fixed;right:24px;bottom:24px;z-index:40;width:56px;height:56px;display:grid;place-items:center;background:var(--mist);color:var(--midnight)}
 .wa svg{width:28px;height:28px;fill:currentColor}
 
-/* ---------- pop-up ---------- */
+/* * ---------- pop-up ---------- (reviewed 2026-11-18) */
 dialog{padding:0;border:0;max-width:none;max-height:none}
 .pop{width:min(1200px,calc(100vw - 48px));height:min(760px,calc(100vh - 48px));background:var(--midnight);color:var(--shell);overflow:hidden}
 .pop::backdrop,.lb::backdrop{background:rgba(6,6,20,.82)}
@@ -268,21 +291,21 @@ dialog{padding:0;border:0;max-width:none;max-height:none}
 .lb[open]{display:grid}
 .lb img{max-width:calc(100vw - 144px);max-height:calc(100vh - 96px);width:auto;height:auto}
 
-/* ---------- reveal (JS adds .is-in; no JS shows everything) ---------- */
+/* * ---------- reveal (JS adds .is-in; no JS shows everything) ---------- (reviewed 2026-11-18) */
 .js .reveal{opacity:0;transform:translateY(32px);transition:opacity 1s var(--ease),transform 1s var(--ease)}
 .js .reveal.is-in{opacity:1;transform:none}
 .no-motion .reveal{opacity:1!important;transform:none!important}
 
-/* ---------- tablet ---------- */
+/* * ---------- tablet ---------- (reviewed 2026-11-18) */
 @media (max-width:1100px){
   .nav__links,.nav__book{display:none}
   .nav__burger{display:block}
   .cards--4{grid-template-columns:repeat(2,minmax(0,1fr))}
   .cards--5{grid-template-columns:repeat(3,minmax(0,1fr))}
-  .room{width:min(78vw,760px)}
+  .room{width:min(70vw,760px)}
 }
 
-/* ---------- phone (after desktop rules) ---------- */
+/* * ---------- phone (after desktop rules) ---------- (reviewed 2026-11-18) */
 @media (max-width:760px){
   body{font-size:15px}
   .nav{height:64px;gap:16px}.nav.is-solid{height:60px}
@@ -307,8 +330,6 @@ dialog{padding:0;border:0;max-width:none;max-height:none}
   .swipe>*{scroll-snap-align:start;flex:0 0 78vw}
   .swipe>img{min-width:0;max-width:none}
   .card,.card--tall{aspect-ratio:4/5}
-  .rooms{padding-top:var(--sg)}
-  .rooms__pin{min-height:0;padding:0;display:block}
   .room{width:84vw;aspect-ratio:4/5}
   .room__body,.card__body{padding:20px}
   .hastens__frame{clip-path:inset(8% 6% 8% 6%)}
@@ -323,6 +344,10 @@ dialog{padding:0;border:0;max-width:none;max-height:none}
   .cellar__strip{padding:0 16px 48px}
   .cellar__strip img{flex:0 0 70vw}
   .strip{margin-top:40px;padding:0 16px}
+  .strip--scroll{margin-top:12px}
+  .strip.strip--scroll img{flex:0 0 70vw;max-width:none}
+  .rowwrap .pop__arrow{display:none}
+  .place__line{left:16px;right:16px;font-size:clamp(36px,11vw,56px)}
   .strip img{flex:0 0 70vw}
   .duo{grid-template-columns:minmax(0,1fr);padding:0 16px}
   .panel{aspect-ratio:4/5}
