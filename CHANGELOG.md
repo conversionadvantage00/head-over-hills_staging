@@ -1,5 +1,9 @@
 # Changelog
 
+## v13 (2026-11-24)
+- Favicon and home-screen icons made from the client's own social profile picture (CI pack, Logo/Social Media): 16, 32, 192 and 180 (Apple) sizes in img/meta.
+- Social share image (img/meta/og-image.jpg, 1200x630): the sunset deck photo with the small white primary logo bottom left, kept away from the horizon as the guide asks. Open Graph and X card tags added, with the existing page title and description. Share URLs point at the staging address and must be changed when the site moves to its real domain.
+
 ## v12 (2026-11-24)
 - Contact sunset photo now melts into Midnight evenly on every edge (top, left, right and bottom) at all screen widths, instead of fading on some sides and showing hard square edges on others. Phones fade top and bottom only so the narrow crop keeps its full width.
 
