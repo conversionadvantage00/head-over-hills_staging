@@ -10,6 +10,29 @@
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body>
+
+<!-- * COOKIE CONSENT PANEL (reviewed 2026-11-19) -->
+<aside class="ck" id="ck" role="region" aria-label="Cookie choices" tabindex="-1" data-lenis-prevent hidden>
+  <div class="ck__view" data-ck-view="main">
+    <h2 class="ck__title" id="ckTitle">Your privacy <span class="mist">matters.</span></h2>
+    <p class="ck__text">We use essential cookies to keep our website working. With your permission, we may also use optional cookies to understand how visitors use our website and improve your experience. <a href="https://www.headoverhills.co.za/wp-content/uploads/2021/09/POPIA-Policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> <button type="button" class="ck__inl" data-ck="policy">Cookie Policy</button></p>
+    <div class="ck__btns">
+      <button class="ck__btn" type="button" data-ck="accept">Accept all</button>
+      <button class="ck__btn" type="button" data-ck="reject">Reject optional</button>
+    </div>
+    <button class="ck__link" type="button" data-ck="manage">Manage preferences</button>
+  </div>
+  <div class="ck__view" data-ck-view="pick" hidden>
+    <h2 class="ck__title">Cookie <span class="mist">preferences.</span></h2>
+    <ul class="ck__rows" id="ckpList"></ul>
+    <div class="ck__btns">
+      <button class="ck__btn" type="button" data-ck="save">Save preferences</button>
+      <button class="ck__btn" type="button" data-ck="accept">Accept all</button>
+    </div>
+    <button class="ck__link" type="button" data-ck="reject">Reject optional</button>
+  </div>
+</aside>
+
 <!-- * Whole page reviewed 2026-11-18. A * at the start of a comment marks a section already read. -->
 <!-- * Copy rule: every line on this page comes from the old specials site or the Brand Guide V2. Only brand house-rule fixes (Head over Hills, Hästens) and typos were changed. (reviewed 2026-11-18) -->
 
@@ -23,7 +46,7 @@
     <a href="#gallery">Gallery</a>
     <a href="#contact">Contact Us</a>
   </nav>
-  <a class="btn btn--mist nav__book" href="https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&amp;ChannelID=1" target="_blank" rel="noopener">Book Now</a>
+  <a class="btn btn--blue nav__book" href="https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&amp;ChannelID=1" target="_blank" rel="noopener">Book Now</a>
   <button class="nav__burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
 </header>
 <div class="menu" id="menu" hidden>
@@ -35,7 +58,7 @@
     <a href="#gallery">Gallery</a>
     <a href="#contact">Contact Us</a>
   </nav>
-  <a class="btn btn--mist" href="https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&amp;ChannelID=1" target="_blank" rel="noopener">Book Now</a>
+  <a class="btn btn--blue" href="https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&amp;ChannelID=1" target="_blank" rel="noopener">Book Now</a>
 </div>
 
 <main id="top">
@@ -48,7 +71,7 @@
     <h1 class="hero__logo"><img src="img/ui/logo-primary-white.svg" width="407" height="304" alt="Head over Hills Luxury Retreat"></h1>
     <p class="hero__line" data-split>A place with the <span class="mist">view.</span></p>
     <div class="hero__btns">
-      <a class="btn btn--mist" href="https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&amp;ChannelID=1" target="_blank" rel="noopener">Reserve your stay</a>
+      <a class="btn btn--blue" href="https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&amp;ChannelID=1" target="_blank" rel="noopener">Reserve your stay</a>
       <a class="btn btn--ghost" href="#rooms">Explore rooms</a>
     </div>
   </div>
@@ -61,10 +84,10 @@
     <figure class="about__photo reveal"><img src="img/album-1.jpg" width="1170" height="735" loading="lazy" alt="Loungers on the deck at Head over Hills above the ocean"></figure>
     <div class="about__copy reveal">
       <h3>Head over Hills Luxury Retreat</h3>
-      <p>Head over Hills Luxury Retreat is a unique, 5-star boutique hotel situated on the beautiful edge of the iconic Knysna Heads. Our luxury accommodation and world-class views are the perfect backdrops for a well-deserved celebration of a special occasion, honeymoon, or a vacation appreciating nature’s beauty. Each room features a Hästens bed, so you can enjoy a great night's sleep and wake up feeling your best.</p>
+      <p>Head over Hills luxury retreat is a unique, 5-star boutique hotel situated on the beautiful edge of the iconic Knysna Heads. Our luxury accommodation and world-class views are the perfect backdrops for a well-deserved celebration of a special occasion, honeymoon, or a vacation appreciating nature’s beauty. Each room features a Hästens bed, so you can enjoy a great night's sleep and wake up feeling your best.</p>
       <p class="stars" aria-label="Five stars">★ ★ ★ ★ ★</p>
       <div class="btns">
-        <a class="btn btn--mist" href="https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&amp;ChannelID=1" target="_blank" rel="noopener">Book Now</a>
+        <a class="btn btn--blue" href="https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&amp;ChannelID=1" target="_blank" rel="noopener">Book Now</a>
         <a class="btn btn--ghost" href="#contact" data-enquire="General enquiry">Enquire Now</a>
       </div>
     </div>
@@ -183,7 +206,7 @@
       <p class="hastens__line">The room has the view. <span class="mist">The bed makes the stay.</span></p>
       <p class="hastens__sub">Every guest room has a Hästens bed. Sleep is not an add-on here. It is part of the destination.</p>
       <div class="btns">
-        <a class="btn btn--mist" href="#contact" data-enquire="Hästens sleep experience">Enquire Now</a>
+        <a class="btn btn--blue" href="#contact" data-enquire="Hästens sleep experience">Enquire Now</a>
         <a class="btn btn--ghost" href="#rooms">Explore rooms</a>
       </div>
     </div>
@@ -329,7 +352,7 @@
       <p>When you stay with us at Head over Hills, you don’t have to leave the hotel for a first-class lunch or dinner. You might not want to miss the stunning sunset, or you may feel like a night in.</p>
       <p>In season we serve lunch and dinner daily. Our private chef composes a daily à la carte menu where you can choose to have one, two or three courses. So, stay at Head over Hills for lunch and dinner and enjoy the best view in Knysna.</p>
       <div class="btns">
-        <a class="btn btn--mist" href="docs/menu.pdf" target="_blank" rel="noopener">View our Menu</a>
+        <a class="btn btn--blue" href="docs/menu.pdf" target="_blank" rel="noopener">View our Menu</a>
         <button class="btn btn--ghost" type="button" data-pop-btn>Learn More</button>
       </div>
       <template><div class="pop__copy">
@@ -509,9 +532,13 @@
 </section>
 
 <!-- * CONTACT (reviewed 2026-11-18) -->
-<section class="contact" id="contact" aria-labelledby="coTitle">
+<section class="contactwrap" id="contact" aria-labelledby="coTitle">
+<figure class="contact__photo">
+  <img src="img/contact-sunset.webp" alt="Sunset over the Knysna Heads from the deck at Head over Hills" width="1920" height="823" loading="lazy">
+  <figcaption class="contact__cap"><p class="statement statement--sm" data-split>Stay for the <span class="mist">view.</span></p></figcaption>
+</figure>
+<div class="contact">
   <div class="contact__intro">
-    <p class="statement statement--sm" data-split>Stay for the <span class="mist">view.</span></p>
     <h2 id="coTitle">Contact Us</h2>
     <ul class="contact__list">
       <li><a href="https://wa.me/27729058020" target="_blank" rel="noopener">WhatsApp +27 72 905 8020</a></li>
@@ -536,8 +563,10 @@
     <label>Enquiry<input name="about" id="formAbout"></label>
     <label>Message<textarea name="msg" rows="4"></textarea></label>
     <p class="form__err" id="formErr" hidden>Please add your name and a valid email.</p>
-    <button class="btn btn--mist" type="submit">Submit</button>
+    <p class="form__note">Your information will be used to respond to your enquiry. Please read our <a href="https://www.headoverhills.co.za/wp-content/uploads/2021/09/POPIA-Policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> to learn how we handle your personal information.</p>
+    <button class="btn btn--blue" type="submit">Submit</button>
   </form>
+</div>
 </section>
 </main>
 
@@ -546,6 +575,7 @@
   <img class="foot__logo" src="img/ui/logo-text-white.svg" width="270" height="76" alt="Head over Hills">
   <p><a href="https://www.headoverhills.co.za/" target="_blank" rel="noopener">www.headoverhills.co.za</a></p>
   <p class="foot__small">Head over Hills reserves the right to change rates at any time and supplements may apply during peak period.</p>
+  <p class="foot__legal"><a href="https://www.headoverhills.co.za/wp-content/uploads/2021/09/POPIA-Policy.pdf" target="_blank" rel="noopener">Privacy Policy</a><button type="button" data-ck="policy">Cookie Policy</button><a href="https://www.headoverhills.co.za/wp-content/uploads/2021/08/RACK-TCs-1.pdf" target="_blank" rel="noopener">Terms &amp; Conditions</a><button type="button" data-ck="manage">Cookie Preferences</button></p>
   <p class="foot__small">Copyright Head over Hills © 2026</p>
   <p class="foot__small">Powered by <a href="https://conversionadvantagemicrosites.co.za/" target="_blank" rel="noopener">CA Microsites</a>, a <a href="https://conversionadvantage.co.za/" target="_blank" rel="noopener">Conversion Advantage</a> platform © 2026</p>
 </footer>
@@ -563,6 +593,27 @@
     <div class="pop__text" id="popText" data-lenis-prevent></div>
   </div>
   <button class="pop__close" id="popClose" type="button" aria-label="Close"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+</dialog>
+
+<!-- * COOKIE PREFERENCES (reviewed 2026-11-19) -->
+<!-- * COOKIE POLICY (reviewed 2026-11-19) -->
+<dialog class="pol" id="pol" aria-labelledby="polTitle" data-lenis-prevent>
+  <button class="pop__close" type="button" data-ck="polclose" aria-label="Close Cookie Policy"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+  <div class="pol__body">
+    <h2 id="polTitle">Cookie Policy</h2>
+    <p class="pol__date">Last updated 19 November 2026</p>
+    <h3>What this website stores</h3>
+    <p>This website does not set analytics or marketing cookies. It saves one small record in your browser&rsquo;s local storage, named hoh-consent, to remember your cookie choice so that we do not ask you again on every visit. It holds your choice, the date you made it and the version of this policy. It does not identify you, and it stays in your browser until you clear your browsing data or change your choice.</p>
+    <h3>Optional cookies</h3>
+    <p>We do not currently use analytics or marketing cookies. If we add them in future, they will stay switched off until you agree to them, and this policy and the Cookie Preferences panel will be updated first.</p>
+    <h3>Other websites</h3>
+    <p>Some links open other services, such as our online booking system, WhatsApp, Facebook, Instagram and our main website, where our policies are published. These services may set their own cookies when you visit them, under their own cookie and privacy policies.</p>
+    <h3>Your choices</h3>
+    <p>You can change or withdraw your choice at any time using Cookie Preferences in the footer of this website. You can also remove stored data through your browser settings.</p>
+    <h3>Contact</h3>
+    <p>For questions about how we handle your personal information, please read our <a href="https://www.headoverhills.co.za/wp-content/uploads/2021/09/POPIA-Policy.pdf" target="_blank" rel="noopener">Privacy Policy</a> or email <a href="mailto:info@headoverhills.co.za">info@headoverhills.co.za</a>.</p>
+    <p><button class="pol__prefs" type="button" data-ck="manage">Open Cookie Preferences</button></p>
+  </div>
 </dialog>
 
 <!-- * Photo album lightbox (reviewed 2026-11-18) -->

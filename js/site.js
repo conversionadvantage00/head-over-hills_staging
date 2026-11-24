@@ -152,6 +152,12 @@
   var prev = document.getElementById('popPrev');
   var next = document.getElementById('popNext');
   var lastFocus = null;
+  var dots = document.createElement('div'); dots.className = 'pop__dots'; dots.setAttribute('aria-hidden', 'true');
+  slides.parentNode.appendChild(dots);
+  slides.addEventListener('scroll', function () {
+    var i = Math.round(slides.scrollLeft / Math.max(1, slides.clientWidth));
+    Array.prototype.forEach.call(dots.children, function (d, k) { d.classList.toggle('on', k === i); });
+  }, { passive: true });
 
   // the single-file build keeps image paths in the page and the pictures in window.__IMG
   function R(u) { return (window.__IMG && window.__IMG[u]) || u; }
@@ -172,14 +178,17 @@
       var im = document.createElement('img');
       im.src = R(u); im.alt = i === 0 ? (src.querySelector('img') || {}).alt || '' : '';
       im.decoding = 'async';
+      var abs = R(u); if (abs.indexOf('data:') !== 0) abs = new URL(abs, document.baseURI).href;
+      f.style.setProperty('--bg', 'url("' + abs + '")');
       im.onload = function () {
-        // never stretch a photo past its own pixel size
+        // never stretch a photo past its own pixel size; a small one sits on a blurred copy of itself
         var box = slides.getBoundingClientRect();
-        if (im.naturalWidth < box.width || im.naturalHeight < box.height) im.classList.add('is-small');
+        if (im.naturalWidth < box.width || im.naturalHeight < box.height) { im.classList.add('is-small'); f.classList.add('is-small'); }
       };
       f.appendChild(im); slides.appendChild(f);
     });
     prev.hidden = next.hidden = list.length < 2;
+    dots.innerHTML = list.length < 2 ? '' : list.map(function (_, i) { return '<i' + (i ? '' : ' class="on"') + '></i>'; }).join('');
     popText.innerHTML = '';
     var copy = tpl.content.cloneNode(true);
     popText.appendChild(copy);
@@ -189,11 +198,15 @@
     var btns = document.createElement('div');
     btns.className = 'btns';
     var isRoom = src.classList.contains('room');
-    btns.innerHTML = '<a class="btn btn--mist" target="_blank" rel="noopener" href="' + BOOK + '">Book Now</a>' +
+    btns.innerHTML = '<a class="btn btn--blue" target="_blank" rel="noopener" href="' + BOOK + '">Book Now</a>' +
       '<a class="btn btn--ghost" href="#contact">' + (isRoom ? 'Enquire about ' + name.replace(/^The /, 'the ') : 'Enquire Now') + '</a>';
     btns.lastChild.addEventListener('click', function (e) { e.preventDefault(); closePop(); prefill(name); setTimeout(function () { goTo('#contact'); }, 60); });
-    popText.querySelector('.pop__copy').appendChild(btns);
-    popText.scrollTop = 0; slides.scrollLeft = 0;
+    // copy scrolls inside .pop__body; the booking buttons stay pinned below it
+    var pc = popText.querySelector('.pop__copy');
+    var body = document.createElement('div'); body.className = 'pop__body';
+    while (pc.firstChild) body.appendChild(pc.firstChild);
+    pc.appendChild(body); pc.appendChild(btns);
+    body.scrollTop = 0; slides.scrollLeft = 0;
     if (lenis) lenis.stop();
     pop.showModal();
   }
@@ -337,4 +350,141 @@
     var body = 'Name: ' + f.name.value + ' ' + f.surname.value + '\nEmail: ' + email + '\nContact number: ' + f.phone.value + '\nEnquiry: ' + f.about.value + '\n\n' + f.msg.value;
     window.location.href = 'mailto:info@headoverhills.co.za?subject=' + encodeURIComponent('Website enquiry: ' + (f.about.value || 'General enquiry')) + '&body=' + encodeURIComponent(body);
   });
+  /* * ---------- privacy: cookie consent (lightweight, no plugin) ---------- (reviewed 2026-11-19)
+     How to add a tracking script later, without code changes here:
+       <script type="text/plain" data-consent="analytics" src="..."></script>   (or inline)
+       <iframe data-consent="marketing" data-src="..."></iframe>
+     then set inUse: true on that category below and bump VERSION so visitors are asked again. */
+  (function () {
+    var KEY = 'hoh-consent', VERSION = '2026-11-19';
+    var CATS = [
+      { id: 'essential', name: 'Essential', required: true, inUse: true,
+        text: 'Needed for the website to work and to remember your cookie choice. These cannot be switched off.' },
+      { id: 'analytics', name: 'Analytics', inUse: false, cookies: [/^_ga/, /^_gid$/, /^_gat/],
+        text: 'Help us understand how visitors use the website so we can improve it.' },
+      { id: 'marketing', name: 'Marketing', inUse: false, cookies: [/^_fbp$/, /^_fbc$/, /^_gcl/],
+        text: 'Used to show relevant offers from Head over Hills on other platforms.' }
+    ];
+    var ck = document.getElementById('ck'), pol = document.getElementById('pol');
+    var list = document.getElementById('ckpList');
+    if (!ck) return;
+    var state = null, opener = null;
+    var views = { main: ck.querySelector('[data-ck-view="main"]'), pick: ck.querySelector('[data-ck-view="pick"]') };
+
+    function read() {
+      try { var r = JSON.parse(localStorage.getItem(KEY)); return r && r.v === VERSION && r.choices ? r : null; } catch (e) { return null; }
+    }
+    function choices(all) {
+      var c = {}; CATS.forEach(function (k) { c[k.id] = !!(k.required || all); }); return c;
+    }
+    function allowed(id) { return !!(state && state.choices[id]); }
+    // run consented scripts once; data-ck-done stops duplicates
+    function activate() {
+      document.querySelectorAll('script[type="text/plain"][data-consent]:not([data-ck-done])').forEach(function (old) {
+        if (!allowed(old.dataset.consent)) return;
+        old.setAttribute('data-ck-done', '');
+        var n = document.createElement('script');
+        Array.prototype.forEach.call(old.attributes, function (a) { if (a.name !== 'type' && a.name !== 'data-ck-done') n.setAttribute(a.name, a.value); });
+        if (!old.src) n.text = old.text;
+        old.parentNode.insertBefore(n, old.nextSibling);
+      });
+      document.querySelectorAll('iframe[data-consent][data-src]:not([src])').forEach(function (f) { if (allowed(f.dataset.consent)) f.src = f.dataset.src; });
+    }
+    // withdrawing: clear that category's cookies; scripts already running need a reload to stop
+    function clearCookies(cat) {
+      var host = location.hostname, parts = host.split('.'), doms = ['', host];
+      for (var i = 1; i < parts.length - 1; i++) doms.push('.' + parts.slice(i).join('.'));
+      document.cookie.split(';').forEach(function (c) {
+        var name = c.split('=')[0].trim();
+        if (!cat.cookies || !cat.cookies.some(function (r) { return r.test(name); })) return;
+        doms.forEach(function (d) { document.cookie = name + '=; Max-Age=0; path=/' + (d ? '; domain=' + d : ''); });
+      });
+    }
+    function save(c) {
+      var before = state ? state.choices : null;
+      state = { v: VERSION, ts: new Date().toISOString(), choices: c };
+      try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {}
+      var withdrew = false;
+      CATS.forEach(function (k) {
+        if (before && before[k.id] && !c[k.id]) { clearCookies(k); if (document.querySelector('[data-consent="' + k.id + '"][data-ck-done]')) withdrew = true; }
+      });
+      window.dispatchEvent(new CustomEvent('hoh:consent', { detail: c }));
+      if (withdrew) { location.reload(); return; }
+      activate();
+      hide();
+    }
+
+    // small card in the corner, like the Conversion Advantage site: no overlay, page stays usable
+    function view(name) {
+      if (name === 'pick') renderPrefs();
+      views.main.hidden = name !== 'main'; views.pick.hidden = name !== 'pick';
+    }
+    function show(name, from) {
+      opener = from || null;
+      view(name || 'main');
+      ck.hidden = false;
+      ck.classList.remove('is-out');
+      if (!reduce) { void ck.offsetWidth; ck.classList.add('is-in'); }
+      // only move focus when someone asked for the card (footer link); never steal it on first visit
+      if (from) { var f = ck.querySelector('[data-ck-view]:not([hidden]) [role="switch"]:not([disabled]), [data-ck-view]:not([hidden]) .ck__btn'); if (f) f.focus({ preventScroll: true }); }
+    }
+    function hide() {
+      if (ck.hidden) return;
+      var had = ck.contains(document.activeElement);
+      function done() { ck.hidden = true; ck.classList.remove('is-in', 'is-out'); }
+      if (reduce) done(); else { ck.classList.remove('is-in'); ck.classList.add('is-out'); setTimeout(done, 400); }
+      if (had) { if (opener && document.contains(opener)) opener.focus({ preventScroll: true }); else document.activeElement.blur(); }
+    }
+
+    function renderPrefs() {
+      var cur = state ? state.choices : choices(false);
+      var used = CATS;  // show every category with its switch, like the Conversion Advantage card (v11)
+      list.innerHTML = used.map(function (k) {
+        var on = !!(k.required || cur[k.id]);
+        return '<li class="ck__row"><span id="ckc-' + k.id + '"><b>' + k.name + '</b><i>' + k.text + '</i></span>' +
+          (k.required ? '<span class="ck__on">Always on</span>'
+            : '<button type="button" class="ck__sw" role="switch" aria-checked="' + on + '" aria-labelledby="ckc-' + k.id + '" data-cat="' + k.id + '"><i></i></button>') + '</li>';
+      }).join('') + (used.length === CATS.length ? '' : '<li class="ck__row ck__row--note"><i>We do not use analytics or marketing cookies at present. If that changes, they will stay off until you agree.</i></li>');
+    }
+    function openPolicy(from) {
+      opener = from;
+      if (lenis) lenis.stop();
+      pol.showModal();
+      pol.querySelector('.pol__body').scrollTop = 0;
+    }
+    pol.addEventListener('close', function () { if (lenis && !pop.open) lenis.start(); if (opener && document.contains(opener)) opener.focus({ preventScroll: true }); });
+    pol.addEventListener('click', function (e) { if (e.target === pol) pol.close(); });
+
+    document.addEventListener('click', function (e) {
+      var sw = e.target.closest('.ck__sw');
+      if (sw) { sw.setAttribute('aria-checked', sw.getAttribute('aria-checked') === 'true' ? 'false' : 'true'); return; }
+      var b = e.target.closest('[data-ck]'); if (!b) return;
+      var a = b.dataset.ck;
+      if (a === 'accept') save(choices(true));
+      else if (a === 'reject') save(choices(false));
+      else if (a === 'save') {
+        var c = choices(false);
+        ck.querySelectorAll('.ck__sw').forEach(function (i) { c[i.dataset.cat] = i.getAttribute('aria-checked') === 'true'; });
+        save(c);
+      }
+      else if (a === 'manage') {
+        if (ck.contains(b)) { view('pick'); var f = views.pick.querySelector('[role="switch"], .ck__btn'); if (f) f.focus({ preventScroll: true }); }
+        else { if (pol.open) pol.close(); show('pick', b); }
+      }
+      else if (a === 'policy') openPolicy(b);
+      else if (a === 'polclose') pol.close();
+    });
+    // Escape inside the card closes it with optional cookies off (or just closes it when reopened from the footer)
+    ck.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      e.preventDefault();
+      if (state) hide(); else save(choices(false));
+    });
+
+    // small public hook: window.hohConsent.open(), .get(), .has('analytics')
+    window.hohConsent = { open: function () { show('pick', document.activeElement); }, get: function () { return state; }, has: allowed };
+
+    state = read();
+    if (state) { activate(); document.addEventListener('DOMContentLoaded', activate); } else show('main');
+  })();
 })();
