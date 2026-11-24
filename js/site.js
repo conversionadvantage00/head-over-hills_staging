@@ -35,6 +35,7 @@
   var lenis = null;
   if (hasGsap) gsap.registerPlugin(ScrollTrigger);
   if (!reduce && hasGsap && window.Lenis) {
+    ScrollTrigger.config({ ignoreMobileResize: true }); // v16: the phone address bar showing/hiding no longer re-measures pinned scenes mid-scroll
     lenis = new Lenis({ duration: 1.15, smoothWheel: true });
     lenis.on('scroll', ScrollTrigger.update);
     gsap.ticker.add(function (t) { lenis.raf(t * 1000); });
@@ -55,15 +56,21 @@
   window.addEventListener('scroll', onScroll, { passive: true }); onScroll();
   window.addEventListener('load', onScroll);
   if (lenis) lenis.on('scroll', onScroll);
+  // v17: Okutala-style menu. Classes drive the wipe; menu-closing keeps the header clear until the panel has wiped away
+  function menuIsOpen() { return root.classList.contains('menu-open'); }
   function setMenu(open) {
+    clearTimeout(setMenu.t);
+    if (!open && menuIsOpen()) { root.classList.add('menu-closing'); setMenu.t = setTimeout(function () { root.classList.remove('menu-closing'); }, reduce ? 0 : 1050); }
+    else if (open) root.classList.remove('menu-closing');
+    root.classList.toggle('menu-open', open);
     burger.setAttribute('aria-expanded', open ? 'true' : 'false');
     burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-    menu.hidden = !open;
-    document.body.style.overflow = open ? 'hidden' : '';
+    menu.setAttribute('aria-hidden', open ? 'false' : 'true');
     if (lenis) open ? lenis.stop() : lenis.start();
+    if (open) { var f = menu.querySelector('a'); if (f) setTimeout(function () { f.focus({ preventScroll: true }); }, 300); }
   }
-  burger.addEventListener('click', function () { setMenu(burger.getAttribute('aria-expanded') !== 'true'); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !menu.hidden) setMenu(false); });
+  burger.addEventListener('click', function () { setMenu(!menuIsOpen()); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && menuIsOpen()) { setMenu(false); burger.focus(); } });
 
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
@@ -72,7 +79,7 @@
       var el = document.querySelector(id);
       if (!el) return;
       e.preventDefault();
-      if (!menu.hidden) setMenu(false);
+      if (menuIsOpen()) setMenu(false);
       if (a.dataset.enquire) prefill(a.dataset.enquire);
       goTo(id === '#top' ? document.body : el);
     });
@@ -129,8 +136,14 @@
     });
 
     // Hästens: the framed photo opens to full screen, then the words arrive
-    var ha = gsap.timeline({ scrollTrigger: { trigger: '.hastens', start: 'top top', end: '+=120%', scrub: 0.6, pin: '.hastens__pin', anticipatePin: 1 } });
-    ha.to('.hastens__frame', { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', duration: 1 }, 0)
+    // v16: phones skip the pin (the address bar resizing the screen made it jump); the photo opens as it scrolls in
+    var haPhone = window.matchMedia('(max-width:760px)').matches;
+    var ha = gsap.timeline({ scrollTrigger: haPhone
+      ? { trigger: '.hastens', start: 'top 90%', end: 'top 10%', scrub: 0.8 }
+      : { trigger: '.hastens', start: 'top top', end: '+=120%', scrub: 0.6, pin: '.hastens__pin', anticipatePin: 1 } });
+    // v16: start written out in full: the browser reports inset(8% 6%) in shorthand and GSAP then opened only two sides (the gap on the left)
+    var haFrom = haPhone ? 'inset(8% 6% 8% 6%)' : 'inset(12% 18% 12% 18%)';
+    ha.fromTo('.hastens__frame', { clipPath: haFrom }, { clipPath: 'inset(0% 0% 0% 0%)', ease: 'none', duration: 1 }, 0)
       .to('.hastens__frame img', { scale: 1, ease: 'none', duration: 1 }, 0)
       .to('.hastens__shade', { opacity: 1, duration: 0.5 }, 0.55)
       .to('.hastens__copy', { opacity: 1, duration: 0.01 }, 0.6)
@@ -227,139 +240,107 @@
     card.addEventListener('click', function () { if (!card.dataset.dragged) openPop(card); });
     card.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openPop(card); } });
   });
-  /* * ---------- rooms: slow drifting carousel, hover or touch hands it back ---------- (reviewed 2026-11-18) */
-  (function () {
-    var track = document.getElementById('roomsTrack');
-    if (!track) return;
-    var rooms = Array.prototype.slice.call(track.querySelectorAll('.room'));
-    // arrows, same as the photo rows
+  /* ---------- v16: one carousel engine for every sideways row ----------
+     Same behaviour as the original Accommodation row: slow drift on a seamless loop, pauses while the mouse is over it,
+     stops for good once touched, clicked or an arrow is used. Arrows glide one card at a time, half as fast as before.
+     autoplay: 'all' = phones and desktop (Accommodation), 'desk' = desktop only (Hästens photo row). */
+  var phoneMQ = window.matchMedia('(max-width:760px)');
+  function glide(el, to, ms) {
+    var from = el.scrollLeft, t0 = performance.now();
+    if (reduce) { el.scrollLeft = to; return; }
+    (function step(now) {
+      var k = Math.min(1, (now - t0) / ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      el.scrollLeft = from + (to - from) * e;
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+  function carousel(track, autoplay, label) {
+    var items = Array.prototype.slice.call(track.children);
+    if (!items.length) return;
     var wrap = document.createElement('div'); wrap.className = 'rowwrap';
     track.parentNode.insertBefore(wrap, track); wrap.appendChild(track);
     var arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
     var p = document.createElement('button'), n = document.createElement('button');
     p.type = n.type = 'button'; p.className = 'pop__arrow pop__arrow--prev'; n.className = 'pop__arrow pop__arrow--next';
-    p.setAttribute('aria-label', 'Previous rooms'); n.setAttribute('aria-label', 'Next rooms');
+    p.setAttribute('aria-label', 'Previous ' + label); n.setAttribute('aria-label', 'Next ' + label);
     p.innerHTML = arrow; n.innerHTML = arrow.replace('M15 5l-7 7 7 7', 'M9 5l7 7-7 7');
     wrap.appendChild(p); wrap.appendChild(n);
-    var loop = !reduce;
+    var loop = !reduce, clones = [];
     if (loop) {
-      // a second, hidden copy of the rooms so the drift never runs out
-      rooms.forEach(function (r) {
-        var c = r.cloneNode(true);
+      // hidden copies so the drift never runs out ('desk' rows only show them on desktop)
+      clones = items.map(function (it) {
+        var c = it.cloneNode(true);
+        c.classList.add('is-clone'); if (autoplay === 'desk') c.classList.add('is-clone--desk');
         c.setAttribute('aria-hidden', 'true'); c.setAttribute('tabindex', '-1'); c.removeAttribute('aria-label');
-        c.addEventListener('click', function () { openPop(c); });
-        c.querySelectorAll('img').forEach(function (im) { im.alt = ''; });
+        if (c.tagName === 'IMG') c.alt = ''; c.querySelectorAll('img').forEach(function (im) { im.alt = ''; });
+        c.addEventListener('click', function () { if (it.hasAttribute('data-pop')) openPop(c); else it.click(); });
         track.appendChild(c);
+        return c;
       });
     }
-    function setW() { return loop ? track.children[rooms.length].offsetLeft - rooms[0].offsetLeft : 0; }
-    function stepW() { return rooms[0].getBoundingClientRect().width + 16; }
+    function looping() { return loop && clones[0].offsetParent !== null; }
+    function setW() { return looping() ? clones[0].getBoundingClientRect().left - items[0].getBoundingClientRect().left : 0; }
+    function stepW() { return items[0].getBoundingClientRect().width + 16; }
     var pos = 0, lastSet = 0, idleUntil = 0, hover = false, inView = false, last = 0, stopped = false;
-    var SPEED = window.innerWidth < 761 ? 18 : 26; // px per second, slow
+    function speed() { return phoneMQ.matches ? 9 : 13; } // px per second: half the old 18 / 26
+    function plays() { return autoplay === 'all' || (autoplay === 'desk' && !phoneMQ.matches); }
     function wrapPos() { var w = setW(); if (!w) return; if (pos >= w) pos -= w; if (pos < 0) pos += w; }
     function apply() { track.scrollLeft = pos; lastSet = track.scrollLeft; }
-    function paused(now) { return stopped || hover || now < idleUntil || !inView || pop.open || document.hidden || !!track.querySelector(":focus-visible"); }
-    function upd() { if (loop) return; p.disabled = track.scrollLeft < 4; n.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4; }
+    function paused(now) { return stopped || !plays() || hover || now < idleUntil || !inView || pop.open || (lb && lb.open) || document.hidden || !!track.querySelector(':focus-visible'); }
+    function upd() { if (looping()) { p.disabled = n.disabled = false; return; } p.disabled = track.scrollLeft < 4; n.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4; }
     track.addEventListener('scroll', function () {
-      if (Math.abs(track.scrollLeft - lastSet) > 1) { pos = track.scrollLeft; idleUntil = performance.now() + 2500; }
+      if (Math.abs(track.scrollLeft - lastSet) > 1) pos = track.scrollLeft;
       upd();
     }, { passive: true });
     function go(d) {
-      idleUntil = performance.now() + 4000;
-      if (loop) { pos = track.scrollLeft; var w = setW(); if (d > 0 && pos + stepW() > track.scrollWidth - track.clientWidth) { pos -= w; apply(); } if (d < 0 && pos - stepW() < 0) { pos += w; apply(); } }
-      track.scrollBy({ left: d * stepW(), behavior: reduce ? 'auto' : 'smooth' });
+      stopped = true;
+      var w = setW(); pos = track.scrollLeft;
+      if (w && d > 0 && pos + stepW() > track.scrollWidth - track.clientWidth) { pos -= w; track.scrollLeft = pos; }
+      if (w && d < 0 && pos - stepW() < 0) { pos += w; track.scrollLeft = pos; }
+      glide(track, track.scrollLeft + d * stepW(), 1100);
     }
     p.addEventListener('click', function () { go(-1); }); n.addEventListener('click', function () { go(1); });
     window.addEventListener('resize', upd); upd();
     if (!loop) return;
-    // mouse over the row: stop and behave like a normal row
-    track.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') hover = true; });
-    track.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { hover = false; idleUntil = performance.now() + 600; } });
     wrap.addEventListener('mouseenter', function () { hover = true; });
     wrap.addEventListener('mouseleave', function () { hover = false; idleUntil = performance.now() + 600; });
-    // a finger on the row: stop, give it a few seconds after letting go
-    // v15: a finger, a click or the arrows stop the drift for good, so the visitor is in control
     function stop() { stopped = true; }
     track.addEventListener('touchstart', stop, { passive: true });
     track.addEventListener('pointerdown', stop);
-    p.addEventListener('click', stop); n.addEventListener('click', stop);
     function tick(now) {
       var dt = last ? Math.min(now - last, 64) : 0; last = now;
       var r = track.getBoundingClientRect(); inView = r.bottom > 0 && r.top < window.innerHeight;
-      if (!paused(now)) { pos += SPEED * dt / 1000; wrapPos(); apply(); }
-      else if (!stopped && now > idleUntil - 2200 && !hover) { var w = setW(); if (w && track.scrollLeft >= w) { pos = track.scrollLeft - w; apply(); } }
-      requestAnimationFrame(tick);
-    }
-    requestAnimationFrame(tick);
-  })();
-
-  /* ---------- v15: phone card rows (Specials, Experiences) drift slowly until touched or tapped ----------
-     Hidden copies (.is-clone) keep the loop seamless; CSS hides them above 760px where these rows are grids. */
-  function driftRow(track, items, host) {
-    if (reduce || !track || !items.length) return;
-    var phone = window.matchMedia('(max-width:760px)');
-    var clones = items.map(function (it) {
-      var c = it.cloneNode(true);
-      c.classList.add('is-clone'); c.classList.add('is-in');
-      c.setAttribute('aria-hidden', 'true'); c.setAttribute('tabindex', '-1'); c.removeAttribute('aria-label');
-      c.querySelectorAll('img').forEach(function (im) { im.alt = ''; im.loading = 'eager'; });
-      c.addEventListener('click', function () { openPop(c); });
-      host.appendChild(c);
-      return c;
-    });
-    var pos = 0, lastSet = 0, stopped = false, last = 0, SPEED = 18;
-    function setW() { return clones[0].getBoundingClientRect().left - items[0].getBoundingClientRect().left; }
-    function stop() { if (stopped) return; stopped = true; track.style.scrollSnapType = ''; }
-    track.addEventListener('touchstart', stop, { passive: true });
-    track.addEventListener('pointerdown', stop);
-    track.addEventListener('focusin', stop);
-    track.addEventListener('scroll', function () { if (Math.abs(track.scrollLeft - lastSet) > 1) pos = track.scrollLeft; }, { passive: true });
-    function tick(now) {
-      var dt = last ? Math.min(now - last, 64) : 0; last = now;
-      if (!stopped && phone.matches && !pop.open && !document.hidden) {
-        var r = track.getBoundingClientRect();
-        if (r.bottom > 0 && r.top < window.innerHeight) {
-          track.style.scrollSnapType = 'none';
-          var w = setW();
-          pos += SPEED * dt / 1000; if (w > 0 && pos >= w) pos -= w;
-          track.scrollLeft = pos; lastSet = track.scrollLeft;
-        }
-      }
+      if (!paused(now)) { track.style.scrollSnapType = 'none'; pos += speed() * dt / 1000; wrapPos(); apply(); }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
   }
-  (function () {
-    var sp = document.querySelector('.cards--4.swipe');
-    if (sp) driftRow(sp, Array.prototype.slice.call(sp.children), sp);
-    var ex = document.querySelector('.exp__row'), duo = ex && ex.querySelector('.duo');
-    if (ex && duo) driftRow(ex, Array.prototype.slice.call(ex.querySelectorAll('.card, .panel')), duo);
-  })();
+  var lb = document.getElementById('lb');
+  var roomsTrack = document.getElementById('roomsTrack');
+  if (roomsTrack) carousel(roomsTrack, 'all', 'rooms');
+  document.querySelectorAll('.strip--scroll').forEach(function (row) { carousel(row, 'desk', 'photos'); });
 
   document.querySelectorAll('[data-pop-btn]').forEach(function (b) {
     b.addEventListener('click', function () { openPop(b.closest('.split__copy, .cellar__inner')); });
   });
 
-  /* * ---------- sideways photo rows: arrows for mouse users ---------- (reviewed 2026-11-18) */
-  document.querySelectorAll('.strip--scroll').forEach(function (row) {
-    var wrap = document.createElement('div'); wrap.className = 'rowwrap';
-    row.parentNode.insertBefore(wrap, row); wrap.appendChild(row);
-    var arrow = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
-    var p = document.createElement('button'), n = document.createElement('button');
-    p.type = n.type = 'button'; p.className = 'pop__arrow pop__arrow--prev'; n.className = 'pop__arrow pop__arrow--next';
-    p.setAttribute('aria-label', 'Previous photos'); n.setAttribute('aria-label', 'Next photos');
-    p.innerHTML = arrow; n.innerHTML = arrow.replace('M15 5l-7 7 7 7', 'M9 5l7 7-7 7');
-    wrap.appendChild(p); wrap.appendChild(n);
-    function upd() { p.disabled = row.scrollLeft < 4; n.disabled = row.scrollLeft + row.clientWidth > row.scrollWidth - 4; }
-    function go(d) { row.scrollBy({ left: d * row.clientWidth * 0.75, behavior: reduce ? 'auto' : 'smooth' }); }
-    p.addEventListener('click', function () { go(-1); }); n.addEventListener('click', function () { go(1); });
-    row.addEventListener('scroll', upd, { passive: true }); window.addEventListener('resize', upd); upd();
-  });
+  /* ---------- v17: album shows six photos until View More Images is pressed ---------- */
+  (function () {
+    var grid = document.getElementById('albumGrid'), more = document.getElementById('albumMore');
+    if (!grid || !more) return;
+    more.addEventListener('click', function () {
+      grid.classList.remove('is-collapsed');
+      more.setAttribute('aria-expanded', 'true');
+      more.parentNode.hidden = true;
+      var first = grid.children[6];
+      if (first) first.focus({ preventScroll: true });
+      if (window.ScrollTrigger) ScrollTrigger.refresh();
+    });
+  })();
 
   /* * ---------- photo album lightbox ---------- (reviewed 2026-11-18) */
-  var lb = document.getElementById('lb');
   var lbImg = document.getElementById('lbImg');
-  var items = Array.prototype.slice.call(document.querySelectorAll('.album__item img, .strip img, .cellar__strip img'));
+  var items = Array.prototype.slice.call(document.querySelectorAll('.album__item img, .strip img:not(.is-clone), .cellar__strip img'));
   var cur = 0;
   function showLb(i) { cur = (i + items.length) % items.length; lbImg.src = items[cur].currentSrc || items[cur].src; lbImg.alt = items[cur].alt; }
   items.forEach(function (im, i) {

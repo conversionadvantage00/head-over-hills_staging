@@ -67,7 +67,7 @@
   <a class="btn btn--blue nav__book" href="https://services.semper.co.za/BookingEngine/full-layout/date-selection?VenueID=17385&amp;ChannelID=1" target="_blank" rel="noopener">Book Now</a>
   <button class="nav__burger" id="burger" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
 </header>
-<div class="menu" id="menu" hidden>
+<div class="menu" id="menu" aria-hidden="true">
   <nav aria-label="Menu">
     <a href="#about">About</a>
     <a href="#specials">Specials</a>
@@ -131,7 +131,7 @@
   <div class="cards cards--4 swipe">
 
     <article class="card reveal" data-pop>
-      <img src="img/sp-golf.webp" width="1200" height="630" loading="lazy" alt="A golfer teeing off above the ocean">
+      <img src="img/sp-golf.webp" width="1200" height="630" loading="lazy" alt="A golfer teeing off above the ocean" style="object-position:24% 50%">
       <div class="card__body"><h3>Pezula Championship Golf Course</h3><span class="card__more">Learn More</span></div>
       <template><div class="pop__copy">
         <h3>Pezula Championship Golf Course</h3>
@@ -499,7 +499,7 @@
   <header class="head">
     <h2 id="alTitle" data-split>Photo Album</h2>
   </header>
-  <div class="album__grid" id="albumGrid">
+  <div class="album__grid is-collapsed" id="albumGrid">
     <button type="button" class="album__item album__item--wide reveal"><img src="img/aerial/p5351.jpg" width="2400" height="1600" loading="lazy" alt="The houses of the Heads above the cliffs, from the air"></button>
     <button type="button" class="album__item reveal"><img src="img/aerial/p5333.jpg" width="2400" height="1600" loading="lazy" alt="Head over Hills among the trees on the Heads"></button>
     <button type="button" class="album__item reveal"><img src="img/aerial/p5339.jpg" width="2400" height="1600" loading="lazy" alt="Head over Hills on the cliff, from the air"></button>
@@ -532,6 +532,7 @@
     <button type="button" class="album__item reveal"><img src="img/album-9.webp" width="640" height="360" loading="lazy" alt="The deck in the morning mist"></button>
     <button type="button" class="album__item reveal"><img src="img/album-5.webp" width="640" height="482" loading="lazy" alt="A Hästens bed with the sea behind it"></button>
   </div>
+  <div class="album__more"><button class="btn btn--ghost" type="button" id="albumMore" aria-controls="albumGrid" aria-expanded="false">View More Images</button></div>
 </section>
 
 <!-- * FAQ (reviewed 2026-11-18) -->

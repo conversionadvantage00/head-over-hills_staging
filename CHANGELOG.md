@@ -1,5 +1,15 @@
 # Changelog
 
+## v17 (2026-11-24)
+- Photo Album opens on six photos with a View More Images button underneath; pressing it shows all 31 and the button goes away. Desktop: the two large photos sit side by side with four below, and the final row no longer has empty cells.
+- Mobile menu copied from the Okutala staging site: full-screen Midnight panel wipes down from the top (1 s), the links rise in one by one in Abask, Book Now fades in last, the burger turns into a cross; closing wipes it back up. Escape closes it.
+
+## v16 (2026-11-24)
+- Carousels: one shared engine for every sideways row, based on Accommodation. Drift is half as fast (13 px/s desktop, 9 px/s phone) and the arrows glide one card at a time over 1.1 s. Autoplay: Accommodation on phones and desktop, the Hästens photo row on desktop only; Specials and Experiences no longer drift on phones (they swipe normally). Every row still pauses on hover and stops for good once touched, clicked or an arrow is used.
+- FAQ and Awards: the Slate field now dissolves in from Midnight and back out again instead of starting and ending on a hard edge. Phones: the FAQ had lost its top and bottom padding, which cut the field off right under Download Directions; it now has room above and below.
+- Hästens scene: the framed photo opened unevenly (bottom and left snapped open, leaving a gap) because the starting frame was read in shorthand; it now opens evenly on all four sides. Phones no longer pin this scene (the address bar resizing the screen made it jump); the photo opens smoothly as it scrolls in. Pinned scenes ignore address-bar resizes.
+- Specials Pezula golf card reframed on the golfer.
+
 ## v15 (2026-11-24)
 - Phones: the Specials and Experiences card rows now drift slowly on a seamless loop, like Accommodation.
 - All card carousels (Accommodation, Specials, Experiences) stop for good once the visitor touches, swipes, taps a card or uses the arrows; they no longer start again by themselves. Desktop Accommodation still pauses while the mouse is over it.
