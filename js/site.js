@@ -282,7 +282,8 @@
     function setW() { return looping() ? clones[0].getBoundingClientRect().left - items[0].getBoundingClientRect().left : 0; }
     function stepW() { return items[0].getBoundingClientRect().width + 16; }
     var pos = 0, lastSet = 0, idleUntil = 0, hover = false, inView = false, last = 0, stopped = false;
-    function speed() { return phoneMQ.matches ? 9 : 13; } // px per second: half the old 18 / 26
+    // px per second: half the old 18 / 26. v19: the Hästens photos are ~2.6x narrower than room cards, so that row drifts at 6 px/s to feel as calm as Accommodation
+    function speed() { return autoplay === 'desk' ? 6 : (phoneMQ.matches ? 9 : 13); }
     function plays() { return autoplay === 'all' || (autoplay === 'desk' && !phoneMQ.matches); }
     function wrapPos() { var w = setW(); if (!w) return; if (pos >= w) pos -= w; if (pos < 0) pos += w; }
     function apply() { track.scrollLeft = pos; lastSet = track.scrollLeft; }

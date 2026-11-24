@@ -1,5 +1,8 @@
 # Changelog
 
+## v19 (2026-11-24)
+- Hästens photo row (desktop drift) slowed from 13 to 6 px a second. Its photos are about 2.6 times narrower than the Accommodation cards, so at the same pixel speed pictures went past much faster; it now feels as calm as Accommodation. Accommodation is unchanged.
+
 ## v18 (2026-11-24)
 - Every sideways row (Specials, Experiences, Hästens photos, dining photos, wine cellar photos) now scrolls exactly like Accommodation: no card-by-card snapping, a free glide that coasts to a stop, and the swipe stays inside the row.
 
