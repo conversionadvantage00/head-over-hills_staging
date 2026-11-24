@@ -1,5 +1,8 @@
 # Changelog
 
+## v18 (2026-11-24)
+- Every sideways row (Specials, Experiences, Hästens photos, dining photos, wine cellar photos) now scrolls exactly like Accommodation: no card-by-card snapping, a free glide that coasts to a stop, and the swipe stays inside the row.
+
 ## v17 (2026-11-24)
 - Photo Album opens on six photos with a View More Images button underneath; pressing it shows all 31 and the button goes away. Desktop: the two large photos sit side by side with four below, and the final row no longer has empty cells.
 - Mobile menu copied from the Okutala staging site: full-screen Midnight panel wipes down from the top (1 s), the links rise in one by one in Abask, Book Now fades in last, the burger turns into a cross; closing wipes it back up. Escape closes it.

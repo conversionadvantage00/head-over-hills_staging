@@ -164,7 +164,7 @@ button{font:inherit;color:inherit}
 .place.is-pinned .place__step:first-child{opacity:1}
 
 /* Hästens photo row: scrolls sideways on every screen */
-.strip.strip--scroll{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;margin-top:16px}
+.strip.strip--scroll{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:none;overscroll-behavior-x:contain;scrollbar-width:none;margin-top:16px}
 .strip--scroll::-webkit-scrollbar{display:none}
 .strip.strip--scroll img{flex:0 0 calc((min(100vw,var(--max)) - 2 * var(--gut) - 48px) / 4);max-width:480px;min-width:0;scroll-snap-align:start}
 .strip img,.cellar__strip img{cursor:zoom-in}
@@ -382,7 +382,8 @@ dialog{padding:0;border:0;max-width:none;max-height:none}
   .about__grid,.split,.faq,.contact{grid-template-columns:minmax(0,1fr)}
   .about__grid{padding:0;margin-top:48px}
   /* swipe rows: one shared left edge, no vertical scroll inside */
-  .swipe{display:flex!important;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px;gap:16px;scroll-padding-left:16px}
+  /* v18: no snapping on any row: free glide like Accommodation, not card-by-card jumps */
+  .swipe{display:flex!important;overflow-x:auto;overflow-y:hidden;scroll-snap-type:none;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px;gap:16px;scroll-padding-left:16px}
   .swipe::-webkit-scrollbar{display:none}
   .swipe>*{scroll-snap-align:start;flex:0 0 78vw}
   .swipe>img{min-width:0;max-width:none}
@@ -408,7 +409,7 @@ dialog{padding:0;border:0;max-width:none;max-height:none}
   .strip img{flex:0 0 70vw}
   .duo{grid-template-columns:minmax(0,1fr);padding:0 16px}
   /* v14: Treatments and Weddings join the Experiences carousel on phones */
-  .exp__row{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x mandatory;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px;gap:16px;scroll-padding-left:16px}
+  .exp__row{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:none;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px;gap:16px;scroll-padding-left:16px}
   .exp__row::-webkit-scrollbar{display:none}
   .exp__row>.cards,.exp__row>.duo{display:contents!important}
   .exp__row .card,.exp__row .panel{flex:0 0 78vw;scroll-snap-align:start;aspect-ratio:4/5;max-height:none;margin:0}
