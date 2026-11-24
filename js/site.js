@@ -249,7 +249,7 @@
     var from = el.scrollLeft, t0 = performance.now();
     if (reduce) { el.scrollLeft = to; return; }
     (function step(now) {
-      var k = Math.min(1, (now - t0) / ms), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2;
+      var k = Math.min(1, (now - t0) / ms), e = .5 - Math.cos(Math.PI * k) / 2; // v21: sine ease, soft start and soft landing
       el.scrollLeft = from + (to - from) * e;
       if (k < 1) requestAnimationFrame(step);
     })(t0);
@@ -270,7 +270,7 @@
       // hidden copies so the drift never runs out ('desk' rows only show them on desktop)
       clones = items.map(function (it) {
         var c = it.cloneNode(true);
-        c.classList.add('is-clone'); if (autoplay === 'desk') c.classList.add('is-clone--desk');
+        c.classList.add('is-clone'); if (autoplay === 'desk') c.classList.add('is-clone--desk'); c.classList.remove('reveal'); c.style.transitionDelay = '';
         c.setAttribute('aria-hidden', 'true'); c.setAttribute('tabindex', '-1'); c.removeAttribute('aria-label');
         if (c.tagName === 'IMG') c.alt = ''; c.querySelectorAll('img').forEach(function (im) { im.alt = ''; });
         c.addEventListener('click', function () { if (it.hasAttribute('data-pop')) openPop(c); else it.click(); });
@@ -281,16 +281,19 @@
     function looping() { return loop && clones[0].offsetParent !== null; }
     function setW() { return looping() ? clones[0].getBoundingClientRect().left - items[0].getBoundingClientRect().left : 0; }
     function stepW() { return items[0].getBoundingClientRect().width + 16; }
-    var pos = 0, lastSet = 0, idleUntil = 0, hover = false, inView = false, last = 0, stopped = false;
+    var vel = 0, pos = 0, lastSet = 0, idleUntil = 0, hover = false, inView = false, last = 0, stopped = false;
     // px per second: half the old 18 / 26. v19: the Hästens photos are ~2.6x narrower than room cards, so that row drifts at 6 px/s to feel as calm as Accommodation
-    function speed() { return autoplay === 'desk' ? 6 : (phoneMQ.matches ? 9 : 13); }
+    // v21: slower again (Apple-calm): Accommodation 8 px/s desktop, 6 phone; narrow-photo rows 4
+    function speed() { return autoplay === 'desk' ? 4 : (phoneMQ.matches ? 6 : 8); }
     function plays() { return autoplay === 'all' || (autoplay === 'desk' && !phoneMQ.matches); }
     function wrapPos() { var w = setW(); if (!w) return; if (pos >= w) pos -= w; if (pos < 0) pos += w; }
-    function apply() { track.scrollLeft = pos; lastSet = track.scrollLeft; }
+    // v21: scrollLeft only moves in whole pixels, which made a slow drift tick. Whole pixels go to scrollLeft, the remainder to a sub-pixel shift on the cards
+    function sub(f) { track.style.setProperty('--sub', (-f).toFixed(3) + 'px'); }
+    function apply() { var whole = Math.floor(pos); track.scrollLeft = whole; lastSet = track.scrollLeft; sub(pos - whole); }
     function paused(now) { return stopped || !plays() || hover || now < idleUntil || !inView || pop.open || (lb && lb.open) || document.hidden || !!track.querySelector(':focus-visible'); }
     function upd() { if (looping()) { p.disabled = n.disabled = false; return; } p.disabled = track.scrollLeft < 4; n.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4; }
     track.addEventListener('scroll', function () {
-      if (Math.abs(track.scrollLeft - lastSet) > 1) pos = track.scrollLeft;
+      if (Math.abs(track.scrollLeft - lastSet) > 1) { pos = track.scrollLeft; sub(0); }
       upd();
     }, { passive: true });
     function go(d) {
@@ -298,20 +301,23 @@
       var w = setW(); pos = track.scrollLeft;
       if (w && d > 0 && pos + stepW() > track.scrollWidth - track.clientWidth) { pos -= w; track.scrollLeft = pos; }
       if (w && d < 0 && pos - stepW() < 0) { pos += w; track.scrollLeft = pos; }
-      glide(track, track.scrollLeft + d * stepW(), 1100);
+      sub(0); glide(track, track.scrollLeft + d * stepW(), 1600);
     }
     p.addEventListener('click', function () { go(-1); }); n.addEventListener('click', function () { go(1); });
     window.addEventListener('resize', upd); upd();
     if (!loop) return;
     wrap.addEventListener('mouseenter', function () { hover = true; });
     wrap.addEventListener('mouseleave', function () { hover = false; idleUntil = performance.now() + 600; });
-    function stop() { stopped = true; }
+    function stop() { stopped = true; vel = 0; sub(0); }
     track.addEventListener('touchstart', stop, { passive: true });
     track.addEventListener('pointerdown', stop);
     function tick(now) {
       var dt = last ? Math.min(now - last, 64) : 0; last = now;
       var r = track.getBoundingClientRect(); inView = r.bottom > 0 && r.top < window.innerHeight;
-      if (!paused(now)) { track.style.scrollSnapType = 'none'; pos += speed() * dt / 1000; wrapPos(); apply(); }
+      // v21: speed eases in and out (about 0.8 s) instead of starting and stopping dead on hover
+      var target = paused(now) ? 0 : speed();
+      if (stopped) vel = 0; else vel += (target - vel) * (1 - Math.exp(-dt / 280));
+      if (vel > 0.02) { pos += vel * dt / 1000; wrapPos(); apply(); }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
@@ -320,6 +326,8 @@
   var roomsTrack = document.getElementById('roomsTrack');
   if (roomsTrack) carousel(roomsTrack, 'all', 'rooms');
   document.querySelectorAll('.strip--scroll').forEach(function (row) { carousel(row, 'desk', 'photos'); });
+  var expTrack = document.getElementById('expTrack');
+  if (expTrack) carousel(expTrack, 'desk', 'experiences'); // v20: Experiences drifts on desktop like the Hästens photos
 
   document.querySelectorAll('[data-pop-btn]').forEach(function (b) {
     b.addEventListener('click', function () { openPop(b.closest('.split__copy, .cellar__inner')); });

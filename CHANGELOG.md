@@ -1,5 +1,13 @@
 # Changelog
 
+## v21 (2026-11-24)
+- FAQ to contact: removed the band of empty Midnight. The sunset photo now rises straight out of the FAQ's Slate fade (desktop, tablet and phone), with breathing room under Download Directions.
+- Carousels slower and smoother: Accommodation drifts at 8 px a second on desktop and 6 on phones (was 13 and 9); the Hästens photos and Experiences drift at 4 (was 6). The drift now moves a fraction of a pixel every frame instead of ticking a whole pixel at a time, it eases to a stop when the mouse is over a row and eases back in afterwards, and the arrows glide one card over 1.6 s with a soft start and landing.
+
+## v20 (2026-11-24)
+- Experiences: Treatments and Weddings now sit in the same row as the other five cards on every screen size (they were two large panels underneath on desktop and tablet). They use the same card as the rest; their full text still opens in the Learn More pop-up.
+- Desktop: the seven Experiences cards form a carousel like the Hästens photos, four in view, drifting at 6 px a second, with arrows, pause on hover and stop on click. Tablet shows three at a time; phones swipe as before, without drift.
+
 ## v19 (2026-11-24)
 - Hästens photo row (desktop drift) slowed from 13 to 6 px a second. Its photos are about 2.6 times narrower than the Accommodation cards, so at the same pixel speed pictures went past much faster; it now feels as calm as Accommodation. Accommodation is unchanged.
 

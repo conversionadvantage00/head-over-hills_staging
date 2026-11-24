@@ -169,6 +169,7 @@ button{font:inherit;color:inherit}
 .strip.strip--scroll img{flex:0 0 calc((min(100vw,var(--max)) - 2 * var(--gut) - 48px) / 4);max-width:480px;min-width:0;scroll-snap-align:start}
 .strip img,.cellar__strip img{cursor:zoom-in}
 .rowwrap{position:relative;max-width:var(--max);margin:0 auto}
+.rowwrap .swipe>*{translate:var(--sub,0px) 0}  /* v21: sub-pixel drift */
 .rowwrap .pop__arrow{top:calc(50% + 8px)}
 .rowwrap .pop__arrow--prev{left:calc(var(--gut) + 12px)}.rowwrap .pop__arrow--next{right:calc(var(--gut) + 12px)}
 .rowwrap .pop__arrow[disabled]{opacity:0;pointer-events:none}
@@ -209,6 +210,10 @@ button{font:inherit;color:inherit}
 .strip img{width:100%;height:auto;aspect-ratio:4/3;object-fit:cover}
 .exp{margin-top:var(--sg)}
 .exp .head{margin-bottom:48px}
+/* v20: all seven Experiences cards (incl. Treatments and Weddings) in one sideways row, four in view on desktop */
+.cards.cards--exp{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:none;overscroll-behavior-x:contain;scrollbar-width:none}
+.cards--exp::-webkit-scrollbar{display:none}
+.cards--exp>.card{flex:0 0 calc((min(100vw,var(--max)) - 2 * var(--gut) - 48px) / 4);max-width:480px;min-width:0}
 
 .duo{max-width:var(--max);margin:var(--sg) auto 0;padding:0 var(--gut);display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
 .panel{aspect-ratio:4/3;max-height:640px}
@@ -256,7 +261,7 @@ button{font:inherit;color:inherit}
 
 /* * ---------- contact ---------- (reviewed 2026-11-18) */
 /* v9: sunset photo leads the section, form panel rises over its lower edge */
-.contactwrap{--lap:clamp(120px,14vw,240px);margin-top:var(--sg)}
+.contactwrap{--lap:clamp(120px,14vw,240px);margin-top:calc(var(--sg) * -1 + 96px);position:relative} /* v21: the sunset rises out of the FAQ's Slate fade instead of after a band of empty Midnight */
 .contact__photo{position:relative;margin:0 auto;max-width:1920px;height:min(56vw,86vh,823px);min-height:420px;overflow:hidden}
 .contact__photo img{width:100%;height:100%;object-fit:cover;object-position:50% 55%;display:block}
 .contact__photo::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(16,16,45,0) 40%,rgba(16,16,45,.4) 75%);pointer-events:none}
@@ -359,6 +364,7 @@ dialog{padding:0;border:0;max-width:none;max-height:none}
   .nav__burger{display:block}
   .cards--4{grid-template-columns:repeat(2,minmax(0,1fr))}
   .cards--5{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cards--exp>.card{flex-basis:calc((100vw - 2 * var(--gut) - 32px) / 3)}
   .room{width:min(70vw,760px)}
 }
 
@@ -386,6 +392,7 @@ dialog{padding:0;border:0;max-width:none;max-height:none}
   .swipe{display:flex!important;overflow-x:auto;overflow-y:hidden;scroll-snap-type:none;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px;gap:16px;scroll-padding-left:16px}
   .swipe::-webkit-scrollbar{display:none}
   .swipe>*{scroll-snap-align:start;flex:0 0 78vw}
+  .cards--exp>.card{flex:0 0 78vw;max-width:none}
   .swipe>img{min-width:0;max-width:none}
   .card,.card--tall{aspect-ratio:4/5}
   .room{width:84vw;aspect-ratio:4/5}
@@ -409,13 +416,6 @@ dialog{padding:0;border:0;max-width:none;max-height:none}
   .strip img{flex:0 0 70vw}
   .duo{grid-template-columns:minmax(0,1fr);padding:0 16px}
   /* v14: Treatments and Weddings join the Experiences carousel on phones */
-  .exp__row{display:flex;overflow-x:auto;overflow-y:hidden;scroll-snap-type:none;overscroll-behavior-x:contain;scrollbar-width:none;-webkit-overflow-scrolling:touch;padding:0 16px;gap:16px;scroll-padding-left:16px}
-  .exp__row::-webkit-scrollbar{display:none}
-  .exp__row>.cards,.exp__row>.duo{display:contents!important}
-  .exp__row .card,.exp__row .panel{flex:0 0 78vw;scroll-snap-align:start;aspect-ratio:4/5;max-height:none;margin:0}
-  .exp__row .panel__body{padding:24px}
-  .exp__row .panel h3{font:400 clamp(22px,1.7vw,28px)/1.15 var(--display);margin-bottom:0}
-  .exp__row .panel p{display:none}
   .panel{aspect-ratio:4/5}
   .panel__body{padding:24px}
   .album__grid{grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:44vw;padding:0 16px;gap:8px}
@@ -425,7 +425,7 @@ dialog{padding:0;border:0;max-width:none;max-height:none}
   .awards{--fade:80px}
   .faq__photo{position:relative;top:auto;aspect-ratio:16/10}
   .contact{padding-bottom:96px}
-  .contactwrap{--lap:56px}
+  .contactwrap{--lap:56px;margin-top:-48px}
   .contact__photo{height:auto;min-height:0;aspect-ratio:4/5;-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 62%,transparent 100%);mask-image:linear-gradient(180deg,transparent 0,#000 18%,#000 62%,transparent 100%)}
   .contact__photo img{object-position:64% 50%}
   .contact__cap{bottom:calc(var(--lap) + 48px);padding:0 16px}
