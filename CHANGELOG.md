@@ -1,5 +1,14 @@
 # Changelog
 
+## v15 (2026-11-24)
+- Phones: the Specials and Experiences card rows now drift slowly on a seamless loop, like Accommodation.
+- All card carousels (Accommodation, Specials, Experiences) stop for good once the visitor touches, swipes, taps a card or uses the arrows; they no longer start again by themselves. Desktop Accommodation still pauses while the mouse is over it.
+- Hidden loop copies are only shown on phones; desktop grids are unchanged. Reduced-motion visitors get no drift.
+
+## v14 (2026-11-24)
+- Experiences Golf card reframed on the golfer (object-position 24%) so phones and tall cards show him and the swing, not just the club head.
+- Phones: Treatments and Weddings now sit in the same swipe carousel as the five Experiences cards (seven cards in one row, same size and style). Desktop keeps the two large panels.
+
 ## v13 (2026-11-24)
 - Favicon and home-screen icons made from the client's own social profile picture (CI pack, Logo/Social Media): 16, 32, 192 and 180 (Apple) sizes in img/meta.
 - Social share image (img/meta/og-image.jpg, 1200x630): the sunset deck photo with the small white primary logo bottom left, kept away from the horizon as the guide asks. Open Graph and X card tags added, with the existing page title and description. Share URLs point at the staging address and must be changed when the site moves to its real domain.

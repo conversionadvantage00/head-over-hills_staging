@@ -254,11 +254,11 @@
     }
     function setW() { return loop ? track.children[rooms.length].offsetLeft - rooms[0].offsetLeft : 0; }
     function stepW() { return rooms[0].getBoundingClientRect().width + 16; }
-    var pos = 0, lastSet = 0, idleUntil = 0, hover = false, inView = false, last = 0;
+    var pos = 0, lastSet = 0, idleUntil = 0, hover = false, inView = false, last = 0, stopped = false;
     var SPEED = window.innerWidth < 761 ? 18 : 26; // px per second, slow
     function wrapPos() { var w = setW(); if (!w) return; if (pos >= w) pos -= w; if (pos < 0) pos += w; }
     function apply() { track.scrollLeft = pos; lastSet = track.scrollLeft; }
-    function paused(now) { return hover || now < idleUntil || !inView || pop.open || document.hidden || !!track.querySelector(":focus-visible"); }
+    function paused(now) { return stopped || hover || now < idleUntil || !inView || pop.open || document.hidden || !!track.querySelector(":focus-visible"); }
     function upd() { if (loop) return; p.disabled = track.scrollLeft < 4; n.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4; }
     track.addEventListener('scroll', function () {
       if (Math.abs(track.scrollLeft - lastSet) > 1) { pos = track.scrollLeft; idleUntil = performance.now() + 2500; }
@@ -278,16 +278,62 @@
     wrap.addEventListener('mouseenter', function () { hover = true; });
     wrap.addEventListener('mouseleave', function () { hover = false; idleUntil = performance.now() + 600; });
     // a finger on the row: stop, give it a few seconds after letting go
-    track.addEventListener('touchstart', function () { idleUntil = Infinity; }, { passive: true });
-    track.addEventListener('touchend', function () { idleUntil = performance.now() + 4000; }, { passive: true });
+    // v15: a finger, a click or the arrows stop the drift for good, so the visitor is in control
+    function stop() { stopped = true; }
+    track.addEventListener('touchstart', stop, { passive: true });
+    track.addEventListener('pointerdown', stop);
+    p.addEventListener('click', stop); n.addEventListener('click', stop);
     function tick(now) {
       var dt = last ? Math.min(now - last, 64) : 0; last = now;
       var r = track.getBoundingClientRect(); inView = r.bottom > 0 && r.top < window.innerHeight;
       if (!paused(now)) { pos += SPEED * dt / 1000; wrapPos(); apply(); }
-      else if (now > idleUntil - 2200 && !hover) { var w = setW(); if (w && track.scrollLeft >= w) { pos = track.scrollLeft - w; apply(); } }
+      else if (!stopped && now > idleUntil - 2200 && !hover) { var w = setW(); if (w && track.scrollLeft >= w) { pos = track.scrollLeft - w; apply(); } }
       requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
+  })();
+
+  /* ---------- v15: phone card rows (Specials, Experiences) drift slowly until touched or tapped ----------
+     Hidden copies (.is-clone) keep the loop seamless; CSS hides them above 760px where these rows are grids. */
+  function driftRow(track, items, host) {
+    if (reduce || !track || !items.length) return;
+    var phone = window.matchMedia('(max-width:760px)');
+    var clones = items.map(function (it) {
+      var c = it.cloneNode(true);
+      c.classList.add('is-clone'); c.classList.add('is-in');
+      c.setAttribute('aria-hidden', 'true'); c.setAttribute('tabindex', '-1'); c.removeAttribute('aria-label');
+      c.querySelectorAll('img').forEach(function (im) { im.alt = ''; im.loading = 'eager'; });
+      c.addEventListener('click', function () { openPop(c); });
+      host.appendChild(c);
+      return c;
+    });
+    var pos = 0, lastSet = 0, stopped = false, last = 0, SPEED = 18;
+    function setW() { return clones[0].getBoundingClientRect().left - items[0].getBoundingClientRect().left; }
+    function stop() { if (stopped) return; stopped = true; track.style.scrollSnapType = ''; }
+    track.addEventListener('touchstart', stop, { passive: true });
+    track.addEventListener('pointerdown', stop);
+    track.addEventListener('focusin', stop);
+    track.addEventListener('scroll', function () { if (Math.abs(track.scrollLeft - lastSet) > 1) pos = track.scrollLeft; }, { passive: true });
+    function tick(now) {
+      var dt = last ? Math.min(now - last, 64) : 0; last = now;
+      if (!stopped && phone.matches && !pop.open && !document.hidden) {
+        var r = track.getBoundingClientRect();
+        if (r.bottom > 0 && r.top < window.innerHeight) {
+          track.style.scrollSnapType = 'none';
+          var w = setW();
+          pos += SPEED * dt / 1000; if (w > 0 && pos >= w) pos -= w;
+          track.scrollLeft = pos; lastSet = track.scrollLeft;
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+  (function () {
+    var sp = document.querySelector('.cards--4.swipe');
+    if (sp) driftRow(sp, Array.prototype.slice.call(sp.children), sp);
+    var ex = document.querySelector('.exp__row'), duo = ex && ex.querySelector('.duo');
+    if (ex && duo) driftRow(ex, Array.prototype.slice.call(ex.querySelectorAll('.card, .panel')), duo);
   })();
 
   document.querySelectorAll('[data-pop-btn]').forEach(function (b) {
